@@ -12,10 +12,6 @@ const common: Configuration = {
   module: {
     rules: [
       {
-        test: /@theintern\/common/,
-        use: 'umd-compat-loader'
-      },
-      {
         test: /\.styl$/,
         use: ['style-loader', 'css-loader', 'stylus-loader']
       },
@@ -25,7 +21,7 @@ const common: Configuration = {
           loader: 'ts-loader',
           options: {
             silent: true,
-            configFile: 'src/browser/tsconfig.json'
+            configFile: 'tsconfig-browser.json'
           }
         }
       }
@@ -71,8 +67,8 @@ module.exports = [
 
 function getEntries() {
   return {
-    intern: './src/browser/intern.ts',
-    remote: './src/browser/remote.ts',
-    config: './src/browser/config.ts'
+    intern: './src/core/browser/intern.ts',
+    remote: './src/core/browser/remote.ts',
+    config: './src/core/browser/config.ts'
   };
 }

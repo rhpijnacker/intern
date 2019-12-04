@@ -1,20 +1,18 @@
 {
-  "extends": "./node_modules/@theintern/dev/tsconfig-base.json",
   "compilerOptions": {
     "declaration": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
     "lib": ["dom", "es2015"],
-    // Build as UMD for compatibility with AMD loaders
-    "module": "umd",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "outDir": "./_build",
-    "rootDir": "."
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    "strict": true,
+    "target": "esnext"
   },
-  "include": [
-    "src/bin/*.ts",
-    "src/loaders/*.ts",
-    "src/tasks/*.ts",
-
-    // Build everything in lib (vs just relying on the bin entry point) so
-    // it'll be available for testing
-    "src/lib/*.ts"
-  ]
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"]
 }
