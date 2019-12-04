@@ -9,13 +9,12 @@ import { Application } from 'typedoc';
 import { isAbsolute, join, relative } from 'path';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { sync as resolve } from 'resolve';
-import chalk from 'chalk';
-import { log } from './lib/util';
+import { log, logError } from './lib/util';
 
 // Use TypeDoc to generate an API description
 log('Generating API data');
 const options = {
-  tsconfig: 'tsconfig-src.json',
+  tsconfig: 'tsconfig-lib.json',
   logger: 'none',
   excludePrivate: true
 };
@@ -24,13 +23,13 @@ const inputFiles = app.options.read(options).inputFiles;
 const project = app.convert(inputFiles);
 
 if (!project) {
-  log(chalk.red('The project could not be analyzed.'));
+  logError('The project could not be analyzed.');
   const typedoc = require.resolve('typedoc');
   const tsc = relative(
     process.cwd(),
     resolve('typescript/bin/tsc', { basedir: typedoc })
   );
-  log(chalk.red(`Try building with ${tsc} to see what's wrong.`));
+  logError(`Try building with ${tsc} to see what's wrong.`);
   process.exit(1);
 }
 

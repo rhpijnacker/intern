@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "declaration": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "lib": ["dom", "es2015"],
@@ -8,9 +7,7 @@
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "./_build",
     "resolveJsonModule": true,
-    "rootDir": ".",
     "strict": true,
     "target": "esnext"
   },

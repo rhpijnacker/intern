@@ -2,12 +2,9 @@
 
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
-import { sync as resolve } from 'resolve';
-import { createInterface } from 'readline';
-import { execSync } from 'child_process';
 import * as program from 'commander';
 
-import { die, enumArg, getLogger, intArg, print } from './lib/util';
+import { enumArg, getLogger, intArg, print } from './lib/util';
 import cli4 from './lib/cli4';
 
 let internDir: any;
@@ -171,64 +168,6 @@ commands['*'] = program.command('*', { noHelp: true }).action(command => {
 });
 
 (async () => {
-  try {
-    internDir = dirname(resolve('intern', { basedir: process.cwd() }));
-    internPkg = JSON.parse(
-      readFileSync(join(internDir, 'package.json'), { encoding: 'utf8' })
-    );
-  } catch (error) {
-    const rl = createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
-
-    try {
-      print(['You need a local install of Intern to use this command.', '']);
-      const shouldInstall = await new Promise(resolve => {
-        rl.question('Install intern now [yes/no/<version>]? ', answer => {
-          if (/y(e(s)?)?/.test(answer)) {
-            resolve('latest');
-          } else if (/no?/.test(answer)) {
-            resolve('no');
-          } else {
-            resolve(answer);
-          }
-        });
-      });
-
-      if (shouldInstall !== 'no') {
-        print();
-        execSync(`npm install intern@${shouldInstall} --save-dev`, {
-          stdio: 'inherit'
-        });
-      }
-    } finally {
-      rl.close();
-    }
-  }
-
-  if (!internPkg) {
-    try {
-      internDir = dirname(resolve('intern', { basedir: process.cwd() }));
-      internPkg = JSON.parse(
-        readFileSync(join(internDir, 'package.json'), {
-          encoding: 'utf8'
-        })
-      );
-    } catch (error) {
-      die([
-        'Install the latest Intern release with:',
-        '',
-        '  npm install --save-dev intern@latest',
-        '',
-        'Install the development version with:',
-        '',
-        '  npm install --save-dev intern@next',
-        ''
-      ]);
-    }
-  }
-
   const context = {
     browsers,
     commands,

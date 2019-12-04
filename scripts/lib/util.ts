@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {
   cp,
   echo,
@@ -119,8 +120,15 @@ export function lint(tsconfigFile: string) {
 /**
  * Log a message to the console
  */
-export function log(...args: any[]) {
-  echo(...args);
+export function log(message: string) {
+  echo(message);
+}
+
+/**
+ * Log an error to the console
+ */
+export function logError(message: string) {
+  echo(chalk.red(message));
 }
 
 export class ExecError extends Error {

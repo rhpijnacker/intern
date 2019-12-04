@@ -52,7 +52,7 @@ module.exports = [
     entry: getEntries(),
     output: {
       filename: '[name].js',
-      path: join(__dirname, '_build/src/browser')
+      path: join(__dirname, '_build/browser')
     }
   },
   {
@@ -60,7 +60,7 @@ module.exports = [
     entry: getEntries(),
     output: {
       filename: '[name].js',
-      path: join(__dirname, '_tests/src/browser')
+      path: join(__dirname, '_tests/browser')
     }
   }
 ];

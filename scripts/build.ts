@@ -5,9 +5,10 @@
 // When the script is first run, do a complete build. If a 'watch' argument is
 // provided, start watchers.
 
-import chalk from 'chalk';
-import { baseDir, copy, copyAll, exec, lint, log } from './lib/util';
+import { writeFileSync } from 'fs';
+import { baseDir, copy, copyAll, exec, lint, log, logError } from './lib/util';
 import { watchProcess } from './lib/watch';
+import * as pkgJson from '../package.json';
 
 const args = process.argv.slice(2);
 const watchMode = args[0] === 'watch';
@@ -15,22 +16,24 @@ const watchMode = args[0] === 'watch';
 // -----------------------------------------------------------------
 // Typescript
 // -----------------------------------------------------------------
-try {
-  const tsconfig = `${baseDir}/tsconfig-src.json`;
+for (const suffix of ['lib', 'bin']) {
+  try {
+    const tsconfig = `${baseDir}/tsconfig-${suffix}.json`;
 
-  log('Linting...');
-  lint(tsconfig);
+    log(`Linting ${suffix}...`);
+    lint(tsconfig);
 
-  log('Compiling...');
-  if (watchMode) {
-    watchProcess('tsc', `npx tsc -p ${tsconfig} --watch`, /\berror TS\d+:/);
-    // const proc = spawn('node', [tsc, '-p', tsconfig, '--watch']);
-    // watchProcess(tag, proc, /\berror TS\d+:/);
-  } else {
-    exec(`npx tsc -p ${tsconfig}`);
+    log(`Compiling ${suffix}...`);
+    if (watchMode) {
+      watchProcess('tsc', `npx tsc -p ${tsconfig} --watch`, /\berror TS\d+:/);
+      // const proc = spawn('node', [tsc, '-p', tsconfig, '--watch']);
+      // watchProcess(tag, proc, /\berror TS\d+:/);
+    } else {
+      exec(`npx tsc -p ${tsconfig}`);
+    }
+  } catch (error) {
+    handleError(error);
   }
-} catch (error) {
-  handleError(error);
 }
 
 // -----------------------------------------------------------------
@@ -56,11 +59,20 @@ try {
 // -----------------------------------------------------------------
 // Resources
 // -----------------------------------------------------------------
-copyAll(['src/**/*.{styl,d.ts,html,js.png}'], `${baseDir}/_build`);
-copy('schemas', `${baseDir}/_build/src`);
-copy('package.json', `${baseDir}/_build/src`);
-copy('README.md', `${baseDir}/_build/src`);
-copy('LICENSE', `${baseDir}/_build/src`);
+const buildDir = `${baseDir}/_build`;
+copyAll(
+  [{ base: 'src', pattern: 'src/**/*.{styl,d.ts,html,js.png}' }],
+  buildDir
+);
+copy('schemas', buildDir);
+copy('README.md', buildDir);
+copy('LICENSE', buildDir);
+
+delete pkgJson['lint-staged'];
+delete pkgJson['pre-commit'];
+delete pkgJson.prettier;
+delete pkgJson.devDependencies;
+writeFileSync(`${buildDir}/package.json`, JSON.stringify(pkgJson, null, '  '));
 
 if (watchMode) {
   // handleError(new Error('Watch mode is currently disabled'));
@@ -71,7 +83,7 @@ log('Done building');
 
 function handleError(error: Error) {
   if (error.name === 'ExecError') {
-    log(chalk.red((<any>error).stderr || (<any>error).stdout));
+    logError((<any>error).stderr || (<any>error).stdout);
     process.exit((<any>error).code);
   } else {
     throw error;

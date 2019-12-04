@@ -5,16 +5,20 @@
     "downlevelIteration": true,
     "lib": ["dom", "es2015"],
     "module": "commonjs",
+    "outDir": "./_build",
     "preserveConstEnums": true,
     "removeComments": true,
+    "rootDir": "./src",
     "sourceMap": true,
-    "target": "es5"
+    "target": "es2015"
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
     "src/core/browser/**",
-    "src/core/lib/browser/**"
+    "src/core/lib/browser/**",
+    "src/bin/**",
+    "src/cli/**"
   ]
 }

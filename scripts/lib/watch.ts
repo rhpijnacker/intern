@@ -1,9 +1,8 @@
-import chalk from 'chalk';
 import { exec, ChildProcessWithoutNullStreams } from 'child_process';
 import { watch, FSWatcher } from 'chokidar';
 import { dirname, join } from 'path';
 import { mkdir, rm } from 'shelljs';
-import { copy, log } from './util';
+import { copy, log, logError } from './util';
 
 function copyAll(file: string, dstDir: string | string[]) {
   if (!Array.isArray(dstDir)) {
@@ -54,11 +53,16 @@ function logProcessOutput(
         : line
     );
   if (errorTest) {
-    lines = lines.map(line => (errorTest.test(line) ? chalk.red(line) : line));
+    lines.forEach(line => {
+      if (errorTest.test(line)) {
+        logError(line);
+      } else {
+        log(line);
+      }
+    });
+  } else {
+    lines.forEach(line => log(`[${name}] ${line}`));
   }
-  lines.forEach(line => {
-    log(`[${name}] ${line}`);
-  });
 }
 
 /**
@@ -82,7 +86,7 @@ export function watchFiles(
       watcher.on('unlink', (file: string) => remove(file, dstDir));
     })
     .on('error', (error: Error) => {
-      log(chalk.red('!!'), 'Watcher error:', error);
+      logError(`Watcher error: ${error.stack}`);
     });
 
   return watcher;
