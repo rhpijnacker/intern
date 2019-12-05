@@ -10,7 +10,7 @@ import {
   ExecOutputReturnValue
 } from 'shelljs';
 import { sync as glob, IOptions } from 'glob';
-import { basename, dirname, join, resolve } from 'path';
+import { basename, dirname, join, relative, resolve } from 'path';
 import { spawnSync } from 'child_process';
 
 export interface ExecReturnValue extends ExecOutputReturnValue {
@@ -32,7 +32,7 @@ export interface FilePattern {
  * Copy the files denoted by an array of glob patterns into a given directory.
  */
 export function copyAll(patterns: (string | FilePattern)[], outDir: string) {
-  patterns.forEach(pattern => {
+  for (const pattern of patterns) {
     let filePattern: string;
     const options: IOptions = {};
 
@@ -44,23 +44,23 @@ export function copyAll(patterns: (string | FilePattern)[], outDir: string) {
       filePattern = pattern;
     }
 
-    glob(filePattern, options).forEach(function(filename) {
-      log(`Copying ${filename} to ${outDir}`);
-      copy(join(options.cwd!, filename), outDir);
-    });
-  });
+    for (const filename of glob(filePattern, options)) {
+      copy(filename, outDir, options.cwd);
+    }
+  }
 }
 
 /**
  * Copy a file or directory to a directory
  */
-export function copy(fileOrDir: string, outDir: string) {
+export function copy(fileOrDir: string, outDir: string, cwd = '.') {
+  log(`Copying ${join(cwd, fileOrDir)} to ${relative('.', outDir)}`);
   const dst = join(outDir, fileOrDir);
   const dstDir = dirname(dst);
   if (!test('-d', dstDir)) {
     mkdir('-p', dstDir);
   }
-  cp('-r', fileOrDir, dst);
+  cp('-r', join(cwd, fileOrDir), dst);
 }
 
 /**

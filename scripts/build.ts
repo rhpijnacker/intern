@@ -5,10 +5,19 @@
 // When the script is first run, do a complete build. If a 'watch' argument is
 // provided, start watchers.
 
-import { writeFileSync } from 'fs';
-import { baseDir, copy, copyAll, exec, lint, log, logError } from './lib/util';
-import { watchProcess } from './lib/watch';
-import * as pkgJson from '../package.json';
+import { readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
+import { baseDir, copy, copyAll, exec, log, logError } from './lib/util';
+import { watchProcess, watchFiles } from './lib/watch';
+
+function handleError(error: Error) {
+  if (error.name === 'ExecError') {
+    logError((<any>error).stderr || (<any>error).stdout);
+    process.exit((<any>error).code);
+  } else {
+    throw error;
+  }
+}
 
 const args = process.argv.slice(2);
 const watchMode = args[0] === 'watch';
@@ -16,18 +25,17 @@ const watchMode = args[0] === 'watch';
 // -----------------------------------------------------------------
 // Typescript
 // -----------------------------------------------------------------
-for (const suffix of ['lib', 'bin']) {
+for (const suffix of ['lib', 'bin', 'tests']) {
   try {
     const tsconfig = `${baseDir}/tsconfig-${suffix}.json`;
 
-    log(`Linting ${suffix}...`);
-    lint(tsconfig);
-
     log(`Compiling ${suffix}...`);
     if (watchMode) {
-      watchProcess('tsc', `npx tsc -p ${tsconfig} --watch`, /\berror TS\d+:/);
-      // const proc = spawn('node', [tsc, '-p', tsconfig, '--watch']);
-      // watchProcess(tag, proc, /\berror TS\d+:/);
+      watchProcess(
+        `tsc-${suffix}`,
+        `npx tsc -p ${tsconfig} --watch`,
+        /\berror TS\d+:/
+      );
     } else {
       exec(`npx tsc -p ${tsconfig}`);
     }
@@ -40,17 +48,11 @@ for (const suffix of ['lib', 'bin']) {
 // Webpack
 // -----------------------------------------------------------------
 try {
+  log('Running webpack...');
   if (watchMode) {
-    // handleError(new Error('Watch mode is currently disabled'));
-    // const proc = spawn('node', [
-    //   webpack,
-    //   '--config',
-    //   webpackConfig,
-    //   '--watch'
-    // ]);
-    // watchProcess('webpack', proc, /^ERROR\b/);
+    watchProcess('webpack', 'npx webpack --watch', /^ERROR\b/);
   } else {
-    exec('npx webpack', { cwd: baseDir });
+    exec('npx webpack');
   }
 } catch (error) {
   handleError(error);
@@ -59,33 +61,41 @@ try {
 // -----------------------------------------------------------------
 // Resources
 // -----------------------------------------------------------------
+log('Copying resources...');
 const buildDir = `${baseDir}/_build`;
-copyAll(
-  [{ base: 'src', pattern: 'src/**/*.{styl,d.ts,html,js.png}' }],
-  buildDir
-);
-copy('schemas', buildDir);
-copy('README.md', buildDir);
-copy('LICENSE', buildDir);
 
-delete pkgJson['lint-staged'];
-delete pkgJson['pre-commit'];
-delete pkgJson.prettier;
-delete pkgJson.devDependencies;
-writeFileSync(`${buildDir}/package.json`, JSON.stringify(pkgJson, null, '  '));
+function copyFiles() {
+  copyAll([{ base: 'src', pattern: '**/*.{styl,d.ts,html,js.png}' }], buildDir);
+  copy('schemas', buildDir);
+  copy('README.md', buildDir);
+  copy('LICENSE', buildDir);
+
+  const pkgJson = JSON.parse(
+    readFileSync(join(baseDir, 'package.json'), { encoding: 'utf8' })
+  );
+  delete pkgJson['lint-staged'];
+  delete pkgJson['pre-commit'];
+  delete pkgJson.prettier;
+  delete pkgJson.devDependencies;
+  writeFileSync(
+    `${buildDir}/package.json`,
+    JSON.stringify(pkgJson, null, '  ')
+  );
+}
+
+copyFiles();
 
 if (watchMode) {
-  // handleError(new Error('Watch mode is currently disabled'));
-  // createFileWatcher(resources[dest], dest);
+  watchFiles(
+    [
+      'src/**/*.{styl,d.ts,html,js.png}',
+      'schemas/**',
+      'README.md',
+      'LICENSE',
+      'package.json'
+    ],
+    copyFiles
+  );
 }
 
 log('Done building');
-
-function handleError(error: Error) {
-  if (error.name === 'ExecError') {
-    logError((<any>error).stderr || (<any>error).stdout);
-    process.exit((<any>error).code);
-  } else {
-    throw error;
-  }
-}

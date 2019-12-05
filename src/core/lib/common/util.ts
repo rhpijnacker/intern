@@ -4,6 +4,8 @@ import { Config, ResourceConfig } from './config';
 import { Events, Executor, PluginDescriptor } from '../executors/Executor';
 import { getPathSep, join, normalize } from './path';
 
+export const defaultConfig = 'intern.json';
+
 export interface EvaluatedProperty {
   name: keyof Config;
   addToExisting: boolean;

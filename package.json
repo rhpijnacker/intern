@@ -5,23 +5,6 @@
   "homepage": "http://theintern.io/",
   "license": "BSD-3-Clause",
   "bugs": "https://github.com/theintern/intern/issues",
-  "files": [
-    "index.*",
-    "*.js",
-    "*.js.map",
-    "bin/*.js",
-    "favicon.*",
-    "browser/*.html",
-    "browser/config.js",
-    "browser/intern.js",
-    "browser/remote.js",
-    "lib",
-    "loaders",
-    "schemas",
-    "tasks",
-    "tests",
-    "types"
-  ],
   "keywords": [
     "bdd",
     "browserstack",

@@ -1,21 +1,33 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
-import * as program from 'commander';
+import { Command } from 'commander';
+import { createInterface } from 'readline';
+import { watch } from 'chokidar';
 
-import { enumArg, getLogger, intArg, print } from './lib/util';
-import cli4 from './lib/cli4';
+import intern from '../core';
+import {
+  collect,
+  die,
+  enumArg,
+  getLogger,
+  intArg,
+  print,
+  readJsonFile
+} from './lib/util';
+import { getConfig } from '../core/lib/node/util';
+import { defaultConfig, getConfigDescription } from '../core/lib/common/util';
 
-let internDir: any;
-let internPkg: any;
+function getConfigFile(cfg: string) {
+  return (/@/.test(cfg) && cfg.split('@')[0]) || defaultConfig;
+}
 
-const pkgPath = dirname(dirname(__dirname));
+const pkgPath = dirname(__dirname);
 const pkg = JSON.parse(
   readFileSync(join(pkgPath, 'package.json'), { encoding: 'utf8' })
 );
 const testsDir = 'tests';
-const commands: { [name: string]: program.Command } = Object.create(null);
 const browsers = {
   chrome: {
     name: 'Chrome'
@@ -36,37 +48,53 @@ const browsers = {
     name: 'Microsft Edge'
   }
 };
+const nodeReporters = [
+  'pretty',
+  'simple',
+  'runner',
+  'benchmark',
+  'junit',
+  'jsoncoverage',
+  'htmlcoverage',
+  'lcov',
+  'cobertura',
+  'teamcity'
+];
+const browserReporters = ['html', 'dom', 'console'];
+const tunnels = ['null', 'selenium', 'saucelabs', 'browserstack', 'cbt'];
 
 let vlog = getLogger();
+let configName = defaultConfig;
 
 process.on('unhandledRejection', reason => {
   console.error(reason);
   process.exit(1);
 });
 
+const program = new Command();
+
 program
   .version(pkg.version)
-  .description(
-    'Run JavaScript tests. If no command is given, Intern is ' +
-      'run using the default test config.  ' +
-      'Run `intern help run` for run options.'
-  )
-  .option('-v, --verbose', 'show more information about what Intern is doing');
+  .description('Run JavaScript tests.')
+  .option('-v, --verbose', 'show more information about what Intern is doing')
+  .option(
+    '-c, --config <file>[@config]',
+    `config file to use (default is ${configName})`
+  );
 
 program.on('option:verbose', () => {
   vlog = getLogger(true);
 });
 
+program.on('option:config', value => {
+  configName = value;
+});
+
 program
   .command('version')
-  .description('Show versions of intern-cli and intern')
+  .description('Show intern version')
   .action(() => {
-    const text = [`intern-cli: ${pkg.version}`];
-    if (internDir) {
-      text.push(`intern: ${internPkg.version}`);
-    }
-    print();
-    print([, ...text, '']);
+    print(pkg.version);
   });
 
 // Add a blank line after help
@@ -74,31 +102,7 @@ program.on('--help', () => {
   print();
 });
 
-commands.help = program
-  .command('help [command]')
-  .description('Get help for a command')
-  .action(commandName => {
-    const cmdName = typeof commandName === 'string' ? commandName : '';
-    const commands: any[] = (<any>program).commands;
-    const command = commands.find(cmd => cmd.name() === cmdName);
-
-    if (command) {
-      command.outputHelp();
-    } else {
-      if (cmdName) {
-        print(`Unknown command: ${cmdName}\n`);
-      }
-
-      print(
-        'To get started with Intern, run `intern init` to setup a ' +
-          `"${testsDir}" directory and then ` +
-          'run `intern` to start testing!'
-      );
-      program.outputHelp();
-    }
-  });
-
-commands.init = program
+program
   .command('init')
   .description('Setup a project for testing with Intern')
   .option(
@@ -118,9 +122,118 @@ commands.init = program
       `  ${Object.keys(browsers).join(', ')}`,
       ''
     ]);
+  })
+  .action(async options => {
+    const rl = createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    if (!existsSync(testsDir)) {
+      try {
+        mkdirSync(testsDir);
+        vlog('Created test directory %s/', testsDir);
+      } catch (error) {
+        die('error creating test directory: ' + error);
+      }
+    }
+
+    try {
+      let data: any;
+
+      // TODO should this also deal with extended configs?
+      const configFile = getConfigFile(configName);
+      if (existsSync(configFile)) {
+        data = readJsonFile(configFile);
+      } else {
+        data = {};
+      }
+
+      const testsGlob = join(testsDir, '**', '*.js');
+      const resources = {
+        suites: [testsGlob],
+        functionalSuites: <string[] | undefined>undefined,
+        environments: <any>undefined
+      };
+
+      if (existsSync(join(testsDir, 'functional'))) {
+        const functionalGlob = join(testsDir, 'functional', '**', '*.js');
+
+        resources.suites.push(`!${functionalGlob}`);
+        resources.functionalSuites = [functionalGlob];
+        resources.environments = [{ browserName: options.browser }];
+      }
+
+      const names: (keyof typeof resources)[] = [
+        'suites',
+        'functionalSuites',
+        'environments'
+      ];
+      for (const name of names) {
+        if (await shouldUpdate(name, resources, data)) {
+          data[name] = resources[name];
+        }
+      }
+
+      vlog('Using browser: %s', options.browser);
+      vlog('Saved config to %s', configFile);
+
+      writeFileSync(configFile, `${JSON.stringify(data, null, '\t')}\n`);
+
+      print();
+      print([
+        'Intern initialized! A test directory containing example unit ' +
+          `and functional tests has been created at ${testsDir}/.` +
+          ` See ${configFile} for configuration options.`,
+        '',
+        'Run the sample unit test with `intern run`.',
+        '',
+        'To run the sample functional test, first start a WebDriver ' +
+          'server (e.g., Selenium), then run `intern run -w`. The ' +
+          `functional tests assume ${options.browser} is installed.`,
+        ''
+      ]);
+    } catch (error) {
+      die('error initializing: ' + error);
+    } finally {
+      rl.close();
+    }
+
+    async function shouldUpdate(name: string, resources: any, data: any) {
+      if (!(name in resources)) {
+        return false;
+      }
+
+      if (!(name in data)) {
+        return true;
+      }
+
+      if (JSON.stringify(resources[name]) === JSON.stringify(data[name])) {
+        return false;
+      }
+
+      let answer = await new Promise<string>(resolve => {
+        print();
+        print([
+          'The existing config file has the following ' + `value for ${name}:`,
+          ''
+        ]);
+        print('  ', data[name]);
+        print();
+        print(['The default value based on our project layout is:', '']);
+        print('  ', resources[name]);
+        rl.question('\n  Should the default be used? ', resolve);
+      });
+
+      if (answer.toLowerCase()[0] !== 'y') {
+        return false;
+      }
+
+      return true;
+    }
   });
 
-commands.run = program
+program
   .command('run [args...]')
   .description('Run tests in Node or in a browser using WebDriver')
   .option('-b, --bail', 'quit after the first failing test')
@@ -133,19 +246,145 @@ commands.run = program
   .option('-I, --noInstrument', 'disable instrumentation')
   .option('--debug', 'enable the Node debugger')
   .option('--serveOnly', "start Intern's test server, but don't run any tests")
+  .option('--showConfig', 'display the resolved config and exit')
   .option('--timeout <int>', 'set the default timeout for async tests', intArg)
   .option('--tunnel <name>', 'use the given tunnel for WebDriver tests')
-  .option('-w, --webdriver', 'run WebDriver tests only');
+  .option('-w, --webdriver', 'run WebDriver tests only')
+  .option(
+    '-f, --fsuites <file|glob>',
+    'specify a functional suite to run (can be used multiple times)',
+    collect
+  )
+  .option(
+    '-r, --reporters <name>',
+    'specify a reporter (can be used multiple times)',
+    collect
+  )
+  .option(
+    '-s, --suites <file|glob>',
+    'specify a suite to run (can be used multiple times)',
+    collect
+  )
+  .option('-n, --node', 'only run Node-based unit tests')
+  .on('--help', () => {
+    print('\n');
+    print([
+      'Node reporters:',
+      '',
+      `  ${nodeReporters.join(', ')}`,
+      '',
+      'Browser reporters:',
+      '',
+      `  ${browserReporters.join(', ')}`,
+      '',
+      'Tunnels:',
+      '',
+      `  ${tunnels.join(', ')}`
+    ]);
+    print();
+  })
+  .action(async (_args, command) => {
+    const { config } = await getConfig(configName);
 
-commands.serve = program
+    if (command.showConfig) {
+      config.showConfig = true;
+    }
+
+    if (command.suites != null) {
+      config.suites = command.suites;
+    }
+
+    if (command.fsuites != null) {
+      config.functionalSuites = command.fsuites;
+    }
+
+    if (command.reporters != null) {
+      config.reporters = command.reporters;
+    } else if (!config.reporters) {
+      config.reporters = ['runner'];
+    }
+
+    if (command.grep != null) {
+      config.grep = command.grep;
+    }
+
+    if (command.bail) {
+      config.bail = true;
+    }
+
+    if (command.port != null) {
+      config.port = command.port;
+    }
+
+    if (command.timeout != null) {
+      config.timeout = command.timeout;
+    }
+
+    if (command.tunnel != null) {
+      config.tunnel = command.tunnel;
+    }
+
+    if (command.noInstrument) {
+      config.excludeInstrumentation = true;
+    }
+
+    if (command.leaveRemoteOpen) {
+      config.leaveRemoteOpen = true;
+    }
+
+    if (command.node != null) {
+      config.environments = ['node'];
+    }
+
+    if (command.webdriver) {
+      // Clear out any node or general suites
+      config.suites = [];
+      config.browser = {
+        suites: []
+      };
+
+      // If the user provided suites, apply them only to the browser
+      // environment
+      if (command.suites) {
+        config.browser.suites.push(...command.suites);
+      }
+
+      // If the config had general suites, move them to the browser
+      // environment
+      if (config.suites) {
+        config.browser.suites.push(...config.suites);
+      }
+    }
+
+    if (command.node && command.webdriver) {
+      die('Only one of --node and --webdriver may be specified');
+    }
+
+    // 'verbose' is a top-level option
+    if (command.parent.verbose) {
+      config.debug = true;
+    }
+
+    intern.configure(config);
+    try {
+      await intern.run();
+    } catch (error) {
+      if (!error.reported) {
+        try {
+          console.error(intern.formatError(error));
+        } catch (e) {
+          console.error(error);
+        }
+      }
+      global.process.exitCode = 1;
+    }
+  });
+
+program
   .command('serve [args...]')
   .description(
     'Start a simple web server for running unit tests in a browser on ' +
       'your system'
-  )
-  .option(
-    '-c, --config <module ID|file>',
-    `config file to use (default is ${testsDir}/intern.js)`
   )
   .option('-o, --open', 'open the test runner URL when the server starts')
   .option('-p, --port <port>', 'port to serve on', intArg)
@@ -159,57 +398,108 @@ commands.serve = program
         'server such as nginx or Apache for running unit tests locally.',
       ''
     ]);
+  })
+  .action(async (_args, command) => {
+    // Allow user-specified args in the standard intern format to be passed
+    // through
+    // const internArgs = args || [];
+    const internConfig: { [name: string]: any } = {
+      config: configName,
+      serveOnly: true
+    };
+
+    if (command.port) {
+      internConfig.serverPort = command.port;
+    }
+
+    if (command.noInstrument) {
+      internConfig.excludeInstrumentation = true;
+    }
+
+    intern.configure(internConfig);
+    await intern.run();
   });
 
 // Handle any unknown commands
-commands['*'] = program.command('*', { noHelp: true }).action(command => {
-  print(`Unknown command: ${command}`);
+program.command('*', { noHelp: true }).action(command => {
+  print(`Unknown command "${command.parent.args[0]}"`);
   program.outputHelp();
 });
 
-(async () => {
-  const context = {
-    browsers,
-    commands,
-    program,
-    vlog,
-    internDir,
-    internPkg,
-    testsDir
-  };
-
-  cli4(context);
-
-  for (const command of program.commands) {
-    command.options.sort((a: program.Option, b: program.Option) => {
-      const af = a.flags.toLowerCase();
-      const bf = b.flags.toLowerCase();
-
-      if (/^--/.test(af) && !/^--/.test(bf)) {
-        return 1;
+program.on('--help', () => {
+  try {
+    getConfig().then(({ config }) => {
+      const text = getConfigDescription(config);
+      if (text) {
+        print([`Using config file at ${defaultConfig}:`, '']);
+        print(`  ${text}`);
+      } else {
+        print(`Using config file at ${defaultConfig}`);
       }
-      if (!/^--/.test(af) && /^--/.test(bf)) {
-        return -1;
-      }
-      if (af < bf) {
-        return -1;
-      }
-      if (af > bf) {
-        return 1;
-      }
-      return 0;
     });
+  } catch (error) {
+    // ignore
   }
+});
 
-  // If no command was provided and the user didn't request help, run intern
-  // by default
-  const parsed = program.parseOptions(process.argv);
-  if (
-    parsed.args.length < 3 &&
-    !(parsed.unknown[0] === '-h' || parsed.unknown[0] === '--help')
-  ) {
-    process.argv.splice(2, 0, 'run');
-  }
+program
+  .command('watch [files]')
+  .description(
+    'Watch test and app files for changes and re-run Node-based ' +
+      'unit tests when files are updated'
+  )
+  .action(async (_files, command) => {
+    const { config } = await getConfig(command.config);
+    const nodeSuites = [
+      ...config.suites,
+      ...(config.node ? config.node.suites : [])
+    ];
 
-  program.parse(process.argv);
-})();
+    const watcher = watch(nodeSuites)
+      .on('ready', () => {
+        print('Watching', nodeSuites);
+        watcher.on('add', scheduleInternRun);
+        watcher.on('change', scheduleInternRun);
+      })
+      .on('error', (error: Error) => {
+        print('Watcher error:', error);
+      });
+
+    process.on('SIGINT', () => watcher.close());
+
+    let timer: number;
+    let suites = new Set();
+    function scheduleInternRun(suite: string) {
+      suites.add(suite);
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(async () => {
+        suites = new Set();
+
+        const internConfig = {
+          debug: command.debug,
+          environments: [],
+          suites
+        };
+
+        intern.configure(internConfig);
+        await intern.run();
+      });
+    }
+
+    intern.configure({ environments: [] });
+    await intern.run();
+  });
+
+// If no command was provided and the user didn't request help, run intern
+// by default
+const parsed = program.parseOptions(process.argv);
+if (
+  parsed.args.length < 3 &&
+  !(parsed.unknown[0] === '-h' || parsed.unknown[0] === '--help')
+) {
+  process.argv.splice(2, 0, 'run');
+}
+
+program.parse(process.argv);

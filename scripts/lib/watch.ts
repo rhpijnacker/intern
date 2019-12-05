@@ -1,33 +1,6 @@
 import { exec, ChildProcessWithoutNullStreams } from 'child_process';
 import { watch, FSWatcher } from 'chokidar';
-import { dirname, join } from 'path';
-import { mkdir, rm } from 'shelljs';
-import { copy, log, logError } from './util';
-
-function copyAll(file: string, dstDir: string | string[]) {
-  if (!Array.isArray(dstDir)) {
-    dstDir = [dstDir];
-  }
-  dstDir.forEach(dir => {
-    copy(file, dir);
-    log(`Copied ${file} -> ${dir}`);
-  });
-}
-
-function remove(file: string, dstDir: string | string[]) {
-  if (!Array.isArray(dstDir)) {
-    dstDir = [dstDir];
-  }
-  dstDir.forEach(dir => {
-    try {
-      const path = join(dir, file);
-      rm(path);
-      log(`Removed ${path}`);
-    } catch (error) {
-      // ignore
-    }
-  });
-}
+import { log, logError } from './util';
 
 function logProcessOutput(
   name: string,
@@ -55,9 +28,9 @@ function logProcessOutput(
   if (errorTest) {
     lines.forEach(line => {
       if (errorTest.test(line)) {
-        logError(line);
+        logError(`[${name}] ${line}`);
       } else {
-        log(line);
+        log(`[${name}] ${line}`);
       }
     });
   } else {
@@ -70,20 +43,14 @@ function logProcessOutput(
  */
 export function watchFiles(
   patterns: string[],
-  dstDir: string | string[]
+  copyFiles: () => void
 ): FSWatcher {
-  if (!Array.isArray(dstDir)) {
-    dstDir = [dstDir];
-  }
-
-  dstDir.forEach(dir => mkdir('-p', dirname(dir)));
-
   const watcher = watch(patterns)
     .on('ready', () => {
-      log(`Watching files for ${patterns[0]} => ${dstDir}`);
-      watcher.on('add', (file: string) => copyAll(file, dstDir));
-      watcher.on('change', (file: string) => copyAll(file, dstDir));
-      watcher.on('unlink', (file: string) => remove(file, dstDir));
+      log(`Watching files for ${patterns[0]}`);
+      watcher.on('add', copyFiles);
+      watcher.on('change', copyFiles);
+      watcher.on('unlink', file => log(`Source file ${file} removed`));
     })
     .on('error', (error: Error) => {
       logError(`Watcher error: ${error.stack}`);
