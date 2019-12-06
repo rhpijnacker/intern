@@ -1,4 +1,4 @@
-import SauceLabsTunnel from '../../src/SauceLabsTunnel';
+import SauceLabsTunnel from 'src/tunnels/SauceLabsTunnel';
 
 registerSuite('unit/SauceLabsTunnel', () => {
   let tunnel: SauceLabsTunnel;

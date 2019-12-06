@@ -1,4 +1,4 @@
-import HtmlCoverage from 'src/lib/reporters/HtmlCoverage';
+import HtmlCoverage from 'src/core/lib/reporters/HtmlCoverage';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

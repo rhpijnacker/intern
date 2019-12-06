@@ -1,12 +1,12 @@
-import RemoteSuite from 'src/lib/RemoteSuite';
-import { ServerListener } from 'src/lib/Server';
+import RemoteSuite from 'src/core/lib/RemoteSuite';
+import { ServerListener } from 'src/core/lib/Server';
 import {
   createMockNodeExecutor,
   createMockRemoteAndSession,
   createMockServer,
   MockNode
-} from '../../support/unit/mocks';
-import { ObjectSuiteDescriptor } from '../../../src/lib/interfaces/object';
+} from 'tests/support/unit/mocks';
+import { ObjectSuiteDescriptor } from 'src/core/lib/interfaces/object';
 
 registerSuite('lib/RemoteSuite', {
   'id property'() {
@@ -74,9 +74,10 @@ registerSuite('lib/RemoteSuite', {
 
         'simple run'() {
           const dfd = this.async();
-          remoteSuite
-            .run()
-            .then(() => dfd.resolve(), error => dfd.reject(error));
+          remoteSuite.run().then(
+            () => dfd.resolve(),
+            error => dfd.reject(error)
+          );
 
           assert.lengthOf(subscribers, 1);
           subscribers[0]('remoteStatus', 'initialized');

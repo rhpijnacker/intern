@@ -1,16 +1,16 @@
 import { STATUS_CODES } from 'http';
-import * as createError from 'http-errors';
-import * as sinon from 'sinon';
+import createError from 'http-errors';
+import sinon from 'sinon';
 
-import _Server from 'src/lib/Server';
+import _Server from 'src/core/lib/Server';
 import {
   createMockNodeExecutor,
   MockExecutor,
   MockRequest,
   MockResponse,
   EventHandler
-} from '../../support/unit/mocks';
-import { mockFs, mockPath } from '../../support/unit/nodeMocks';
+} from 'tests/support/unit/mocks';
+import { mockFs, mockPath } from 'tests/support/unit/nodeMocks';
 
 const mockRequire = <mocking.MockRequire>intern.getPlugin('mockRequire');
 

@@ -1,4 +1,4 @@
-import TextCoverage from 'src/lib/reporters/TextCoverage';
+import TextCoverage from 'src/core/lib/reporters/TextCoverage';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

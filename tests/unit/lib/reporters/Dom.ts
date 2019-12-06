@@ -1,7 +1,7 @@
-import Suite from 'src/lib/Suite';
-import Test from 'src/lib/Test';
-import _Dom from 'src/lib/reporters/Dom';
-import { createMockBrowserExecutor } from '../../../support/unit/mocks';
+import Suite from 'src/core/lib/Suite';
+import Test from 'src/core/lib/Test';
+import _Dom from 'src/core/lib/reporters/Dom';
+import { createMockBrowserExecutor } from 'tests/support/unit/mocks';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 const createDocument = intern.getPlugin<mocking.DocCreator>('createDocument');
@@ -13,7 +13,7 @@ let Dom: typeof _Dom;
 
 registerSuite('intern/lib/reporters/Dom', {
   before() {
-    return mockRequire(require, 'src/lib/reporters/Dom', {
+    return mockRequire(require, 'src/core/lib/reporters/Dom', {
       '@theintern/common': { global: { scrollTo() {} } }
     }).then(resource => {
       removeMocks = resource.remove;

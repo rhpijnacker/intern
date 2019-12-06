@@ -1,6 +1,6 @@
 import { CoverageMap } from 'istanbul-lib-coverage';
 import { spy, stub } from 'sinon';
-import _Coverage, { CoverageOptions } from 'src/lib/reporters/Coverage';
+import _Coverage, { CoverageOptions } from 'src/core/lib/reporters/Coverage';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');
@@ -36,7 +36,7 @@ registerSuite('lib/reporters/Coverage', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/reporters/Coverage', {
+      return mockRequire(require, 'src/core/lib/reporters/Coverage', {
         '@theintern/common': { global: mockGlobal },
         'istanbul-lib-coverage': {
           createCoverageMap: mockCreateCoverageMap

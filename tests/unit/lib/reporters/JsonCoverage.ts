@@ -1,4 +1,4 @@
-import JsonCoverage from 'src/lib/reporters/JsonCoverage';
+import JsonCoverage from 'src/core/lib/reporters/JsonCoverage';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

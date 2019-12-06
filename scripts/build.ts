@@ -25,7 +25,7 @@ const watchMode = args[0] === 'watch';
 // -----------------------------------------------------------------
 // Typescript
 // -----------------------------------------------------------------
-for (const suffix of ['lib', 'bin', 'tests']) {
+for (const suffix of ['lib', 'bin']) {
   try {
     const tsconfig = `${baseDir}/tsconfig-${suffix}.json`;
 

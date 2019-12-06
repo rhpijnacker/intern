@@ -2,10 +2,10 @@ import { spy } from 'sinon';
 
 import MockStream from './support/MockStream';
 
-import Suite from 'src/lib/Suite';
-import Test from 'src/lib/Test';
-import { Executor } from 'src/lib/executors/Executor';
-import TeamCity from 'src/lib/reporters/TeamCity';
+import Suite from 'src/core/lib/Suite';
+import Test from 'src/core/lib/Test';
+import { Executor } from 'src/core/lib/executors/Executor';
+import TeamCity from 'src/core/lib/reporters/TeamCity';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

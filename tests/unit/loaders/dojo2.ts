@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
-import { global } from '@theintern/common';
+import { global } from 'src/common';
 
-import { LoaderInit } from 'src/lib/executors/Executor';
+import { LoaderInit } from 'src/core/lib/executors/Executor';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 

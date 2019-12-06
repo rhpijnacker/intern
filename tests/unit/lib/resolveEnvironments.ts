@@ -1,10 +1,10 @@
-import { NormalizedEnvironment } from '@theintern/digdug/Tunnel';
+import { NormalizedEnvironment } from 'src/tunnels/Tunnel';
 import { sep } from 'path';
 
-import Environment from 'src/lib/Environment';
+import Environment from 'src/core/lib/Environment';
 import _resolveEnvironments, {
   EnvironmentOptions
-} from 'src/lib/resolveEnvironments';
+} from 'src/core/lib/resolveEnvironments';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 

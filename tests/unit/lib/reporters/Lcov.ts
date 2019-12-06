@@ -1,4 +1,4 @@
-import LcovCoverage from 'src/lib/reporters/Lcov';
+import LcovCoverage from 'src/core/lib/reporters/Lcov';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

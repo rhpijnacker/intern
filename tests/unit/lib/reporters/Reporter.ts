@@ -1,12 +1,12 @@
 import { spy } from 'sinon';
-import { global } from '@theintern/common';
+import { global } from 'src/common';
 
 import _Reporter, {
   createEventHandler,
   eventHandler
-} from 'src/lib/reporters/Reporter';
-import { Events } from 'src/lib/executors/Executor';
-import Test from 'src/lib/Test';
+} from 'src/core/lib/reporters/Reporter';
+import { Events } from 'src/core/lib/executors/Executor';
+import Test from 'src/core/lib/Test';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

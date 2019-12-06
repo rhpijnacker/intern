@@ -1,5 +1,5 @@
-import _Html from 'src/lib/reporters/Html';
-import { createMockBrowserExecutor } from '../../../support/unit/mocks';
+import _Html from 'src/core/lib/reporters/Html';
+import { createMockBrowserExecutor } from 'tests/support/unit/mocks';
 import { createLocation } from './support/mocks';
 
 const mockRequire = <mocking.MockRequire>intern.getPlugin('mockRequire');
@@ -15,7 +15,7 @@ let reporter: _Html;
 
 registerSuite('intern/lib/reporters/Html', {
   before() {
-    return mockRequire(require, 'src/lib/reporters/Html', {
+    return mockRequire(require, 'src/core/lib/reporters/Html', {
       'src/lib/reporters/html/html.styl': {}
     }).then(resource => {
       removeMocks = resource.remove;
@@ -236,9 +236,7 @@ registerSuite('intern/lib/reporters/Html', {
         assert.equal(
           summaryTable!.textContent!.replace(/\n+/g, ''),
           `Suites1Tests${tests.length}Duration0:00.${suite.timeElapsed}` +
-            `Skipped${suite.numSkippedTests}Failed${
-              suite.numFailedTests
-            }Success Rate${rate}%`
+            `Skipped${suite.numSkippedTests}Failed${suite.numFailedTests}Success Rate${rate}%`
         );
 
         const reportTable = doc.body.querySelector('table');

@@ -1,5 +1,5 @@
-import Test from 'intern/lib/Test';
-import * as util from '../../../src/lib/util';
+import Test from 'src/core/lib/Test';
+import * as util from 'src/webdriver/lib/util';
 
 declare let __cov_abcdef: number;
 declare let a: any;

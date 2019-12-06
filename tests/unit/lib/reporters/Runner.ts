@@ -1,5 +1,5 @@
 import { createSandbox, spy } from 'sinon';
-import _Runner from 'src/lib/reporters/Runner';
+import _Runner from 'src/core/lib/reporters/Runner';
 import {
   MockConsole,
   MockCoverageMap,
@@ -7,9 +7,9 @@ import {
   createMockConsole,
   createMockCoverageMap,
   createMockNodeExecutor
-} from '../../../support/unit/mocks';
+} from 'tests/support/unit/mocks';
 
-import { TunnelMessage } from '../../../../src/lib/executors/Node';
+import { TunnelMessage } from 'src/core/lib/executors/Node';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

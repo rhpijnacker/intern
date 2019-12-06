@@ -1,4 +1,4 @@
-import TestingBotTunnel from '../../src/TestingBotTunnel';
+import TestingBotTunnel from 'src/tunnels/TestingBotTunnel';
 
 registerSuite('unit/TestingBotTunnel', () => {
   let tunnel: TestingBotTunnel;

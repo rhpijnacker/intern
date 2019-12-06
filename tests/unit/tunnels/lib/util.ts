@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { EventEmitter } from 'events';
-import * as util from '../../../src/lib/util';
+import * as util from 'src/tunnels/lib/util';
 
 function rmFileAndDir(filename: string) {
   fs.unlinkSync(filename);

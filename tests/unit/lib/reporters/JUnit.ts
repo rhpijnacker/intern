@@ -1,8 +1,8 @@
 import { spy, stub } from 'sinon';
 
-import _JUnit from 'src/lib/reporters/JUnit';
-import Test from 'src/lib/Test';
-import Suite from 'src/lib/Suite';
+import _JUnit from 'src/core/lib/reporters/JUnit';
+import Test from 'src/core/lib/Test';
+import Suite from 'src/core/lib/Suite';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

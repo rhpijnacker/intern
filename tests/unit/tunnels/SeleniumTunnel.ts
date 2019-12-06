@@ -1,4 +1,4 @@
-import SeleniumTunnel from '../../src/SeleniumTunnel';
+import SeleniumTunnel from 'src/tunnels/SeleniumTunnel';
 
 registerSuite('unit/SeleniumTunnel', {
   config: {

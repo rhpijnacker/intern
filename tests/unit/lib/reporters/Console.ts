@@ -1,7 +1,7 @@
-import Suite from 'src/lib/Suite';
-import Test from 'src/lib/Test';
-import ConsoleReporter from 'src/lib/reporters/Console';
-import { createMockConsole } from '../../../support/unit/mocks';
+import Suite from 'src/core/lib/Suite';
+import Test from 'src/core/lib/Test';
+import ConsoleReporter from 'src/core/lib/reporters/Console';
+import { createMockConsole } from 'tests/support/unit/mocks';
 
 const mockExecutor = <any>{
   on() {},

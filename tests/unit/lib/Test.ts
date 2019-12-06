@@ -1,14 +1,14 @@
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import { Executor } from 'src/lib/executors/Executor';
+import { Executor } from 'src/core/lib/executors/Executor';
 import Test, {
   isTest,
   isTestFunction,
   isTestOptions,
   TestOptions,
   TestProperties
-} from 'src/lib/Test';
-import Suite from 'src/lib/Suite';
+} from 'src/core/lib/Test';
+import Suite from 'src/core/lib/Suite';
 
 import {
   createMockRemote,

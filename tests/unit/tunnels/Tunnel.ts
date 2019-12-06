@@ -1,5 +1,5 @@
-import { Task } from '@theintern/common';
-import Tunnel from '../../src/Tunnel';
+import { Task } from 'src/common';
+import Tunnel from 'src/tunnels/Tunnel';
 
 registerSuite('unit/Tunnel', () => {
   let tunnel: Tunnel;

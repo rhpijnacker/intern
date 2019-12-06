@@ -1,9 +1,9 @@
-import Simple from 'src/lib/reporters/Simple';
+import Simple from 'src/core/lib/reporters/Simple';
 import {
   createMockNodeExecutor,
   MockConsole,
   createMockConsole
-} from '../../../support/unit/mocks';
+} from 'tests/support/unit/mocks';
 
 let mockConsole: MockConsole;
 let reporter: Simple;

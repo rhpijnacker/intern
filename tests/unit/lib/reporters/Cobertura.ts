@@ -1,4 +1,4 @@
-import Cobertura from 'src/lib/reporters/Cobertura';
+import Cobertura from 'src/core/lib/reporters/Cobertura';
 
 const { registerSuite } = intern.getPlugin('interface.object');
 const { assert } = intern.getPlugin('chai');

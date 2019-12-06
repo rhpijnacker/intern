@@ -1,26 +1,27 @@
 import { spy, SinonSpy } from 'sinon';
 import * as tty from 'tty';
 
-import RemoteSuite from 'src/lib/RemoteSuite';
-import _Pretty, { Result } from 'src/lib/reporters/Pretty';
+import RemoteSuite from 'src/core/lib/RemoteSuite';
+import Suite from 'src/core/lib/Suite';
+import _Pretty, { Result, Report } from 'src/core/lib/reporters/Pretty';
 
 import {
   createMockCharm,
   createMockCoverageMap,
   createMockNodeExecutor
-} from '../../../support/unit/mocks';
+} from 'tests/support/unit/mocks';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
 registerSuite('intern/lib/reporters/Pretty', () => {
   return {
     before() {
-      return mockRequire(require, 'src/lib/reporters/Pretty', {
+      return mockRequire(require, 'src/core/lib/reporters/Pretty', {
         charm: createMockCharm,
         'istanbul-lib-coverage': {
           createCoverageMap: createMockCoverageMap
         },
-        '@theintern/common': {
+        'src/common': {
           global: {
             process: {
               stdout: {
@@ -179,19 +180,19 @@ registerSuite('intern/lib/reporters/Pretty', () => {
       },
 
       coverage() {
-        const report = pretty['_getReport']({ sessionId: 'foo' });
+        const report = pretty['_getReport']({ sessionId: 'foo' } as Suite);
         pretty.coverage({
           sessionId: 'foo',
           coverage: { functions: 5 }
         });
         assert.equal(
-          report.coverageMap.merge.callCount,
+          (report.coverageMap.merge as SinonSpy).callCount,
           1,
           'coverage data should have been merged into report'
         );
         assert.deepEqual(
           report.coverageMap.data,
-          { functions: 5 },
+          { functions: 5 } as any,
           'expected coverage data to have been merged into sourcemap'
         );
       },
@@ -306,14 +307,14 @@ registerSuite('intern/lib/reporters/Pretty', () => {
           }
 
           assert.equal(
-            fooReport[testType],
+            fooReport[testType as keyof Report],
             1,
             'expected suite report to include suite test count'
           );
 
           const totalReport: typeof fooReport = pretty['_total'];
           assert.equal(
-            totalReport[testType],
+            totalReport[testType as keyof Report],
             1,
             'expected total report to include suite test count'
           );
@@ -411,7 +412,7 @@ registerSuite('intern/lib/reporters/Pretty', () => {
               platform: 'MAC'
             }
           }
-        });
+        } as Suite);
 
         // Set a total value so the progress bar will draw
         report.numTotal = 3;

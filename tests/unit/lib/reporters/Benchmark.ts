@@ -1,9 +1,9 @@
 import { createSandbox, SinonSandbox, SinonSpy } from 'sinon';
-import _Benchmark from 'src/lib/reporters/Benchmark';
+import _Benchmark from 'src/core/lib/reporters/Benchmark';
 import {
   createMockConsole,
   createMockExecutor
-} from '../../../support/unit/mocks';
+} from 'tests/support/unit/mocks';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -28,7 +28,7 @@ registerSuite('intern/lib/reporters/Benchmark', {
       })
     };
 
-    return mockRequire(require, 'src/lib/reporters/Benchmark', {
+    return mockRequire(require, 'src/core/lib/reporters/Benchmark', {
       fs
     }).then(resource => {
       removeMocks = resource.remove;

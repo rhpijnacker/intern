@@ -1,19 +1,19 @@
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import Suite, { SuiteOptions } from 'src/lib/Suite';
-import Test from 'src/lib/Test';
-import { InternError } from 'src/lib/types';
+import Suite, { SuiteOptions } from 'src/core/lib/Suite';
+import Test from 'src/core/lib/Test';
+import { InternError } from 'src/core/lib/types';
 
 import {
   createMockExecutor,
   createMockRemoteAndSession
-} from '../../support/unit/mocks';
-import _Deferred from '../../../src/lib/Deferred';
-import { TestFunction as _TestFunction } from '../../../src/lib/Test';
+} from 'tests/support/unit/mocks';
+import _Deferred from 'src/core/lib/Deferred';
+import { TestFunction as _TestFunction } from 'src/core/lib/Test';
 import {
   ObjectSuiteDescriptor as _ObjectSuiteDescriptor,
   Tests
-} from '../../../src/lib/interfaces/object';
+} from 'src/core/lib/interfaces/object';
 
 type lifecycleMethod = 'before' | 'beforeEach' | 'afterEach' | 'after';
 
