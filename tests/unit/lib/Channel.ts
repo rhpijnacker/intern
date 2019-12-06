@@ -1,5 +1,5 @@
-import { Task } from '@theintern/common';
-import _Channel, { ChannelOptions } from 'src/lib/Channel';
+import { Task } from 'src/common';
+import _Channel, { ChannelOptions } from 'src/core/lib/Channel';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -11,9 +11,9 @@ let removeMocks: () => void;
 
 registerSuite('lib/Channel', {
   before() {
-    return mockRequire(require, 'src/lib/Channel', {
-      'src/lib/channels/WebSocket': { default: MockWebSocket },
-      'src/lib/channels/Http': { default: MockHttp }
+    return mockRequire(require, 'src/core/lib/Channel', {
+      'src/core/lib/channels/WebSocket': { default: MockWebSocket },
+      'src/core/lib/channels/Http': { default: MockHttp }
     }).then(handle => {
       removeMocks = handle.remove;
       Channel = handle.module.default;

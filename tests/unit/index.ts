@@ -8,8 +8,8 @@ class MockNode {}
 registerSuite('index', {
   before() {
     return mockRequire(require, 'src/index', {
-      'src/lib/executors/Node': { default: MockNode },
-      '@theintern/common': { global: mockGlobal }
+      'src/core/lib/executors/Node': { default: MockNode },
+      'src/common': { global: mockGlobal }
     }).then(resource => {
       removeMocks = resource.remove;
     });

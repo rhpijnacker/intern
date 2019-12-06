@@ -1,15 +1,15 @@
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 
-import _instrument from 'src/lib/middleware/instrument';
-import Server from 'src/lib/Server';
+import _instrument from 'src/core/lib/middleware/instrument';
+import Server from 'src/core/lib/Server';
 import {
   createMockNodeExecutor,
   createMockServer,
   MockRequest,
   MockResponse,
   createMockServerContext
-} from '../../../support/unit/mocks';
-import { mockFs, mockPath, MockStats } from '../../../support/unit/nodeMocks';
+} from 'tests/support/unit/mocks';
+import { mockFs, mockPath, MockStats } from 'tests/support/unit/nodeMocks';
 import { normalize } from 'path';
 import { Stats } from 'fs';
 
@@ -35,7 +35,7 @@ registerSuite('lib/middleware/instrument', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/middleware/instrument', {
+      return mockRequire(require, 'src/core/lib/middleware/instrument', {
         fs,
         path
       }).then(resource => {
@@ -123,13 +123,13 @@ registerSuite('lib/middleware/instrument', function() {
           },
 
           'read error'() {
-            sandbox.stub(fs, 'stat').callsFake((path, callback) => {
+            sandbox.stub(fs, 'stat').callsFake((path, _options, callback) => {
               const data = fs.__fileData[testPath];
               fs.__fileData[testPath] = undefined;
-              callback(null, (new MockStats(
-                path,
-                data!.type
-              ) as unknown) as Stats);
+              callback(
+                null,
+                (new MockStats(path, data!.type) as unknown) as Stats
+              );
             });
             handler(request, response, next);
 

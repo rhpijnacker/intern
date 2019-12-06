@@ -14,8 +14,8 @@ import {
   createMockRemote,
   createMockExecutor,
   createMockSession
-} from '../../support/unit/mocks';
-import { createSuite } from '../../support/unit/factories';
+} from 'tests/support/unit/mocks';
+import { createSuite } from 'tests/support/unit/factories';
 
 function createTest(
   options: Partial<TestProperties> & { executor?: Executor } = {}

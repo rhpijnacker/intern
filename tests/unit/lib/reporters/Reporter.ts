@@ -25,8 +25,8 @@ registerSuite('lib/reporters/Reporter', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/reporters/Reporter', {
-        '@theintern/common': { global: mockGlobal }
+      return mockRequire(require, 'src/core/lib/reporters/Reporter', {
+        'src/common': { global: mockGlobal }
       }).then(handle => {
         removeMocks = handle.remove;
         Reporter = handle.module.default;

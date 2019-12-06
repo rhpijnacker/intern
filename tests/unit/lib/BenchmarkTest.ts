@@ -1,15 +1,17 @@
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
 import BenchmarkTest, {
   BenchmarkTestOptions,
   BenchmarkDeferredTestFunction,
   BenchmarkTestFunction
-} from 'src/lib/BenchmarkTest';
-import Suite from 'src/lib/Suite';
-import { BenchmarkData } from 'src/lib/reporters/Benchmark';
-import Test from 'src/lib/Test';
-import BenchmarkSuite, { BenchmarkSuiteOptions } from 'src/lib/BenchmarkSuite';
-import Deferred from 'src/lib/Deferred';
+} from 'src/core/lib/BenchmarkTest';
+import Suite from 'src/core/lib/Suite';
+import { BenchmarkData } from 'src/core/lib/reporters/Benchmark';
+import Test from 'src/core/lib/Test';
+import BenchmarkSuite, {
+  BenchmarkSuiteOptions
+} from 'src/core/lib/BenchmarkSuite';
+import Deferred from 'src/core/lib/Deferred';
 
 type FullBenchmarkTestFunction = BenchmarkTestFunction & { options: any };
 

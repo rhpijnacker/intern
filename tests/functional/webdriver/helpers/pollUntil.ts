@@ -1,7 +1,7 @@
-import Command from '../../../src/Command';
-import pollUntil from '../../../src/helpers/pollUntil';
+import Command from 'src/webdriver/Command';
+import pollUntil from 'src/webdriver/helpers/pollUntil';
 import { createSessionFromRemote } from '../support/util';
-import { ObjectSuiteDescriptor } from 'intern/lib/interfaces/object';
+import { ObjectSuiteDescriptor } from 'src/core/lib/interfaces/object';
 
 registerSuite('leadfoot/helpers/pollUntil', () => {
   let command: Command<any>;

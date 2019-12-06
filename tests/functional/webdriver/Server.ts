@@ -1,11 +1,11 @@
 import * as util from './support/util';
-import { Task } from '@theintern/common';
-import Server from '../../src/Server';
-import Session from '../../src/Session';
+import { Task } from 'src/common';
+import Server from 'src/webdriver/Server';
+import Session from 'src/webdriver/Session';
 import * as urlUtil from 'url';
-import { Capabilities } from '../../src/interfaces';
-import Test from 'intern/lib/Test';
-import { ObjectSuiteDescriptor } from 'intern/lib/interfaces/object';
+import { Capabilities, LeadfootURL } from 'src/webdriver/interfaces';
+import Test from 'src/core/lib/Test';
+import { ObjectSuiteDescriptor } from 'src/core/lib/interfaces/object';
 
 registerSuite('Server', () => {
   let server: Server;
@@ -28,7 +28,7 @@ registerSuite('Server', () => {
           hostname: 'test',
           port: '1234',
           pathname: '/w/d'
-        });
+        } as LeadfootURL);
         assert.strictEqual(server.url, 'https://test:1234/w/d/');
       },
 
@@ -40,7 +40,7 @@ registerSuite('Server', () => {
           pathname: '/w/d/',
           username: 'user',
           password: 'pass'
-        });
+        } as LeadfootURL);
         assert.strictEqual(server.url, 'https://user:pass@test:1234/w/d/');
       },
 
@@ -52,7 +52,7 @@ registerSuite('Server', () => {
           pathname: '/w/d/',
           username: 'user',
           accessKey: 'pass'
-        });
+        } as LeadfootURL);
         assert.strictEqual(server.url, 'https://user:pass@test:1234/w/d/');
       },
 

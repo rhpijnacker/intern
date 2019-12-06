@@ -1,7 +1,7 @@
-import Command from '../../../src/Command';
-import pollUntilTruthy from '../../../src/helpers/pollUntilTruthy';
+import Command from 'src/webdriver/Command';
+import pollUntilTruthy from 'src/webdriver/helpers/pollUntilTruthy';
 import { createSessionFromRemote } from '../support/util';
-import { ObjectSuiteDescriptor } from 'intern/lib/interfaces/object';
+import { ObjectSuiteDescriptor } from 'src/core/lib/interfaces/object';
 
 registerSuite('helpers/pollUntilTruthy', () => {
   let command: Command<any>;

@@ -1,7 +1,7 @@
 import { spy, SinonSpy } from 'sinon';
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import _Http from 'src/lib/channels/Http';
+import _Http from 'src/core/lib/channels/Http';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -22,8 +22,8 @@ registerSuite('lib/channels/Http', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/channels/Http', {
-        '@theintern/common': {
+      return mockRequire(require, 'src/core/lib/channels/Http', {
+        'src/common': {
           request,
           Task
         }

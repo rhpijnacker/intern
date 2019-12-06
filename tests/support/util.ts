@@ -1,11 +1,8 @@
 import { rm } from 'shelljs';
-import Tunnel from '../../src/Tunnel';
+import Tunnel from 'src/tunnels/Tunnel';
 
 /**
  * Cleans up a tunnel by stopping it if the tunnel is running and deleting its target install directory
- *
- * @param tunnel
- * @return {Promise} A promise that resolves when cleanup is complete
  */
 export function cleanup(tunnel: Tunnel) {
   if (!tunnel) {

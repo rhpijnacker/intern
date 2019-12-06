@@ -43,7 +43,7 @@ registerSuite('lib/reporters/JUnit', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/reporters/JUnit', {
+      return mockRequire(require, 'src/core/lib/reporters/JUnit', {
         fs: mockFs
       }).then(handle => {
         removeMocks = handle.remove;

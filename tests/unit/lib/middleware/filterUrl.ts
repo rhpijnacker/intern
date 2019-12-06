@@ -1,7 +1,7 @@
 import { spy, SinonSpy } from 'sinon';
 
-import filterUrl from 'src/lib/middleware/filterUrl';
-import { MockRequest, MockResponse } from '../../../support/unit/mocks';
+import filterUrl from 'src/core/lib/middleware/filterUrl';
+import { MockRequest, MockResponse } from 'tests/support/unit/mocks';
 
 registerSuite('lib/middleware/filterUrl', function() {
   let handler: (request: any, response: any, next: any) => void;

@@ -5,7 +5,7 @@ import {
   die,
   enumArg,
   _setDieMethod
-} from 'src/lib/util';
+} from 'src/cli/lib/util';
 import { mkdirSync, readdirSync, rmdirSync, statSync, unlinkSync } from 'fs';
 import { join } from 'path';
 

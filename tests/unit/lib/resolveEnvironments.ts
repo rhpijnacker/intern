@@ -105,8 +105,8 @@ function assertResolveEnvironments(
 
 registerSuite('lib/resolveEnvironments', {
   before() {
-    return mockRequire(require, 'src/lib/resolveEnvironments', {
-      'src/lib/node/process': {
+    return mockRequire(require, 'src/core/lib/resolveEnvironments', {
+      'src/core/lib/node/process': {
         default: {
           cwd: () => (sep === '/' ? '/foo' : 'C:\\foo')
         }

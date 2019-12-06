@@ -1,7 +1,7 @@
 import { useFakeTimers, SinonFakeTimers } from 'sinon';
-import { Task } from '@theintern/common';
-import _WebSocket from 'src/lib/channels/WebSocket';
-import { parseUrl } from '../../../../src/lib/browser/util';
+import { Task } from 'src/common';
+import _WebSocket from 'src/core/lib/channels/WebSocket';
+import { parseUrl } from 'src/core/lib/browser/util';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -28,9 +28,9 @@ registerSuite('lib/channels/WebSocket', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/channels/WebSocket', {
-        'src/lib/browser/util': { parseUrl },
-        '@theintern/common': { global: { WebSocket: MockWebSocket }, Task }
+      return mockRequire(require, 'src/core/lib/channels/WebSocket', {
+        'src/core/lib/browser/util': { parseUrl },
+        'src/common': { global: { WebSocket: MockWebSocket }, Task }
       }).then(handle => {
         removeMocks = handle.remove;
         WebSocket = handle.module.default;

@@ -13,10 +13,10 @@ let doc: Document;
 let location: Location;
 let reporter: _Html;
 
-registerSuite('intern/lib/reporters/Html', {
+registerSuite('src/core/lib/reporters/Html', {
   before() {
     return mockRequire(require, 'src/core/lib/reporters/Html', {
-      'src/lib/reporters/html/html.styl': {}
+      'src/core/lib/reporters/html/html.styl': {}
     }).then(resource => {
       removeMocks = resource.remove;
       Html = resource.module.default;

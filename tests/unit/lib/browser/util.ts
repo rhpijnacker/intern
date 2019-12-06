@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import * as _util from 'src/lib/browser/util';
+import * as _util from 'src/core/lib/browser/util';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -62,8 +62,8 @@ registerSuite('lib/browser/util', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/browser/util', {
-        '@theintern/common': {
+      return mockRequire(require, 'src/core/lib/browser/util', {
+        'src/common': {
           request,
           global: {
             location: {
@@ -72,7 +72,7 @@ registerSuite('lib/browser/util', function() {
             }
           }
         },
-        'src/lib/common/util': mockUtil
+        'src/core/lib/common/util': mockUtil
       }).then(handle => {
         removeMocks = handle.remove;
         util = handle.module;

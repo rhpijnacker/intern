@@ -13,7 +13,7 @@ import {
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
-registerSuite('intern/lib/reporters/Pretty', () => {
+registerSuite('src/core/lib/reporters/Pretty', () => {
   return {
     before() {
       return mockRequire(require, 'src/core/lib/reporters/Pretty', {

@@ -1,6 +1,6 @@
-import _ErrorFormatter from 'src/lib/common/ErrorFormatter';
-import { InternError } from 'src/lib/types';
-import { createMockExecutor, MockExecutor } from '../../../support/unit/mocks';
+import _ErrorFormatter from 'src/core/lib/common/ErrorFormatter';
+import { InternError } from 'src/core/lib/types';
+import { createMockExecutor, MockExecutor } from 'tests/support/unit/mocks';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -24,7 +24,7 @@ registerSuite('lib/common/ErrorFormatter', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/common/ErrorFormatter', {
+      return mockRequire(require, 'src/core/lib/common/ErrorFormatter', {
         diff: { diffJson }
       }).then(handle => {
         removeMocks = handle.remove;

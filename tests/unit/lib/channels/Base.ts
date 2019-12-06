@@ -1,7 +1,7 @@
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import Base, { isChannel } from 'src/lib/channels/Base';
-import { RemoteEvents } from 'src/lib/RemoteSuite';
+import Base, { isChannel } from 'src/core/lib/channels/Base';
+import { RemoteEvents } from 'src/core/lib/RemoteSuite';
 
 class TestBase extends Base {
   sent: any[] = [];

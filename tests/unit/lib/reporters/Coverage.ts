@@ -37,7 +37,7 @@ registerSuite('lib/reporters/Coverage', function() {
   return {
     before() {
       return mockRequire(require, 'src/core/lib/reporters/Coverage', {
-        '@theintern/common': { global: mockGlobal },
+        'src/common': { global: mockGlobal },
         'istanbul-lib-coverage': {
           createCoverageMap: mockCreateCoverageMap
         },

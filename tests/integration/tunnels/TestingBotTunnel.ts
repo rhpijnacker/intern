@@ -1,5 +1,8 @@
-import { addEnvironmentTest, addStartStopTest } from '../support/integration';
-import TestingBotTunnel from '../../src/TestingBotTunnel';
+import {
+  addEnvironmentTest,
+  addStartStopTest
+} from 'tests/support/integration';
+import TestingBotTunnel from 'src/tunnels/TestingBotTunnel';
 
 function checkEnvironment(environment: any) {
   assert.property(environment, 'selenium_name');

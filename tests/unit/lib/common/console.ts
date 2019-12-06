@@ -1,5 +1,5 @@
 import { createSandbox } from 'sinon';
-import * as _console from 'src/lib/common/console';
+import * as _console from 'src/core/lib/common/console';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -21,8 +21,8 @@ registerSuite('lib/common/console', {
   tests: {
     'console exists': {
       before() {
-        return mockRequire(require, 'src/lib/common/console', {
-          '@theintern/common': {
+        return mockRequire(require, 'src/core/lib/common/console', {
+          'src/common': {
             global: {
               console: mockConsole
             }
@@ -57,8 +57,8 @@ registerSuite('lib/common/console', {
 
     'console does not exist': {
       before() {
-        return mockRequire(require, 'src/lib/common/console', {
-          '@theintern/common': {
+        return mockRequire(require, 'src/core/lib/common/console', {
+          'src/common': {
             global: { console: undefined }
           }
         }).then(handle => {

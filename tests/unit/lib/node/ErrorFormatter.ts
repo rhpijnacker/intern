@@ -1,8 +1,8 @@
 import { join } from 'path';
 
-import _ErrorFormatter from 'src/lib/node/ErrorFormatter';
-import { InternError } from 'src/lib/types';
-import { createMockNodeExecutor, MockNode } from '../../../support/unit/mocks';
+import _ErrorFormatter from 'src/core/lib/node/ErrorFormatter';
+import { InternError } from 'src/core/lib/types';
+import { createMockNodeExecutor, MockNode } from 'tests/support/unit/mocks';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -91,11 +91,11 @@ registerSuite('lib/node/ErrorFormatter', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/node/ErrorFormatter', {
+      return mockRequire(require, 'src/core/lib/node/ErrorFormatter', {
         'source-map': { SourceMapConsumer },
         path: mockPath,
         fs: mockFs,
-        'src/lib/node/util': mockUtil
+        'src/core/lib/node/util': mockUtil
       }).then(handle => {
         removeMocks = handle.remove;
         ErrorFormatter = handle.module.default;

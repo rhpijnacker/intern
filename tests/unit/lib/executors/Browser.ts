@@ -1,6 +1,6 @@
 import { spy, createSandbox } from 'sinon';
-import { Task, isPromiseLike, deepMixin } from '@theintern/common';
-import _Browser, { Config } from 'src/lib/executors/Browser';
+import { Task, isPromiseLike, deepMixin } from 'src/common';
+import _Browser, { Config } from 'src/core/lib/executors/Browser';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -85,13 +85,13 @@ registerSuite('lib/executors/Browser', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/executors/Browser', {
-        'src/lib/common/ErrorFormatter': { default: MockErrorFormatter },
-        'src/lib/common/console': mockConsole,
-        'src/lib/browser/util': mockUtil,
+      return mockRequire(require, 'src/core/lib/executors/Browser', {
+        'src/core/lib/common/ErrorFormatter': { default: MockErrorFormatter },
+        'src/core/lib/common/console': mockConsole,
+        'src/core/lib/browser/util': mockUtil,
         chai: mockChai,
         minimatch: { Minimatch: MockMiniMatch },
-        '@theintern/common': {
+        'src/common': {
           request,
           global: mockGlobal,
           isPromiseLike,

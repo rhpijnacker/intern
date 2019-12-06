@@ -1,13 +1,13 @@
 import * as sinon from 'sinon';
 
-import post from 'src/lib/middleware/post';
+import post from 'src/core/lib/middleware/post';
 import {
   createMockNodeExecutor,
   createMockServer,
   MockRequest,
   MockResponse,
   createMockServerContext
-} from '../../../support/unit/mocks';
+} from 'tests/support/unit/mocks';
 
 registerSuite('lib/middleware/post', function() {
   let handler: (request: any, response: any, next: any) => void;

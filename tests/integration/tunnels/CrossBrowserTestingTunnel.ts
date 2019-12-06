@@ -1,6 +1,9 @@
 import { rm } from 'shelljs';
-import { addEnvironmentTest, addStartStopTest } from '../support/integration';
-import CrossBrowserTestingTunnel from '../../src/CrossBrowserTestingTunnel';
+import {
+  addEnvironmentTest,
+  addStartStopTest
+} from 'tests/support/integration';
+import CrossBrowserTestingTunnel from 'src/tunnels/CrossBrowserTestingTunnel';
 
 function checkEnvironment(environment: any) {
   assert.property(environment, 'api_name');

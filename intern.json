@@ -1,5 +1,5 @@
 {
-  "$schema": "./src/schemas/config.json",
+  "$schema": "./schemas/config.json",
 
   "description": "Run tests on Node, excluding the benchmark tests",
 

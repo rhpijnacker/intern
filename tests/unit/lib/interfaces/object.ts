@@ -1,8 +1,8 @@
 import { createSandbox } from 'sinon';
 
-import * as _objInt from 'src/lib/interfaces/object';
-import Test from 'src/lib/Test';
-import Suite from 'src/lib/Suite';
+import * as _objInt from 'src/core/lib/interfaces/object';
+import Test from 'src/core/lib/Test';
+import Suite from 'src/core/lib/Suite';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -33,8 +33,8 @@ registerSuite('lib/interfaces/object', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/interfaces/object', {
-        '@theintern/common': { global: mockGlobal }
+      return mockRequire(require, 'src/core/lib/interfaces/object', {
+        'src/common': { global: mockGlobal }
       }).then(handle => {
         removeMocks = handle.remove;
         objInt = handle.module;

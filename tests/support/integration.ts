@@ -1,9 +1,9 @@
 import * as nodeUtil from 'util';
 import * as util from './util';
-import { Tests } from 'intern/lib/interfaces/object';
+import { Tests } from 'src/core/lib/interfaces/object';
 
-import Tunnel, { IOEvent, NormalizedEnvironment } from 'src/Tunnel';
-import { createCompositeHandle, Handle } from '@theintern/common';
+import Tunnel, { IOEvent, NormalizedEnvironment } from 'src/tunnels/Tunnel';
+import { createCompositeHandle, Handle } from 'src/common';
 
 function writeIOEvent(event: IOEvent) {
   process.stdout.write(event.data);

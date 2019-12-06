@@ -11,10 +11,10 @@ const mockExecutor = createMockBrowserExecutor();
 let removeMocks: () => void;
 let Dom: typeof _Dom;
 
-registerSuite('intern/lib/reporters/Dom', {
+registerSuite('src/core/lib/reporters/Dom', {
   before() {
     return mockRequire(require, 'src/core/lib/reporters/Dom', {
-      '@theintern/common': { global: { scrollTo() {} } }
+      'src/common': { global: { scrollTo() {} } }
     }).then(resource => {
       removeMocks = resource.remove;
       Dom = resource.module.default;

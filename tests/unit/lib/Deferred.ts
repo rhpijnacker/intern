@@ -1,4 +1,4 @@
-import Deferred from 'src/lib/Deferred';
+import Deferred from 'src/core/lib/Deferred';
 
 registerSuite('lib/Deferred', {
   '#rejectOnError': {

@@ -16,7 +16,7 @@ let fs: {
 };
 let fileData: { [filename: string]: string };
 
-registerSuite('intern/lib/reporters/Benchmark', {
+registerSuite('src/core/lib/reporters/Benchmark', {
   before() {
     sandbox = createSandbox();
     fs = {

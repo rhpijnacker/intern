@@ -6,5 +6,8 @@
   },
   "include": [
     "tests/**/*.ts"
+  ],
+  "exclude": [
+    "tests/examples/**"
   ]
 }

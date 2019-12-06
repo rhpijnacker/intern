@@ -1,11 +1,11 @@
 import { spy, SinonSpy, stub } from 'sinon';
-import { Task, deepMixin, isPromiseLike } from '@theintern/common';
+import { Task, deepMixin, isPromiseLike } from 'src/common';
 
-import { Config } from 'src/lib/common/config';
-import _Node from 'src/lib/executors/Node';
-import Suite from 'src/lib/Suite';
+import { Config } from 'src/core/lib/common/config';
+import _Node from 'src/core/lib/executors/Node';
+import Suite from 'src/core/lib/Suite';
 
-import { testProperty } from '../../../support/unit/executor';
+import { testProperty } from 'tests/support/unit/executor';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -240,26 +240,26 @@ registerSuite('lib/executors/Node', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/executors/Node', {
-        'src/lib/common/ErrorFormatter': { default: MockErrorFormatter },
-        'src/lib/common/console': mockConsole,
-        'src/lib/node/util': mockNodeUtil,
+      return mockRequire(require, 'src/core/lib/executors/Node', {
+        'src/core/lib/common/ErrorFormatter': { default: MockErrorFormatter },
+        'src/core/lib/common/console': mockConsole,
+        'src/core/lib/node/util': mockNodeUtil,
         chai: mockChai,
         path: mockPath,
         fs: mockFs,
-        '@theintern/common': {
+        'src/common': {
           global: mockGlobal,
           isPromiseLike,
           Task,
           deepMixin
         },
-        'src/lib/reporters/Pretty': { default: MockReporter },
-        'src/lib/reporters/Runner': { default: MockReporter },
-        'src/lib/reporters/Simple': { default: MockReporter },
-        'src/lib/reporters/JsonCoverage': { default: MockReporter },
-        'src/lib/reporters/HtmlCoverage': { default: MockReporter },
-        'src/lib/reporters/Lcov': { default: MockReporter },
-        'src/lib/reporters/Benchmark': { default: MockReporter },
+        'src/core/lib/reporters/Pretty': { default: MockReporter },
+        'src/core/lib/reporters/Runner': { default: MockReporter },
+        'src/core/lib/reporters/Simple': { default: MockReporter },
+        'src/core/lib/reporters/JsonCoverage': { default: MockReporter },
+        'src/core/lib/reporters/HtmlCoverage': { default: MockReporter },
+        'src/core/lib/reporters/Lcov': { default: MockReporter },
+        'src/core/lib/reporters/Benchmark': { default: MockReporter },
         'istanbul-lib-coverage': {
           classes: {
             FileCoverage: {
@@ -293,18 +293,18 @@ registerSuite('lib/executors/Node', function() {
         'ts-node': {
           register: mockTsNodeRegister
         },
-        'src/lib/Server': { default: MockServer },
-        'src/lib/resolveEnvironments': {
+        'src/core/lib/Server': { default: MockServer },
+        'src/core/lib/resolveEnvironments': {
           default: () => {
             return ['foo env'];
           }
         },
-        '@theintern/leadfoot/Command': { default: MockCommand },
-        '@theintern/leadfoot/Server': { default: MockLeadfootServer },
+        'src/webdriver/Command': { default: MockCommand },
+        'src/webdriver/Server': { default: MockLeadfootServer },
         '@theintern/digdug/NullTunnel': { default: MockTunnel },
         '@theintern/digdug/BrowserStackTunnel': { default: MockTunnel },
-        'src/lib/ProxiedSession': { default: MockSession },
-        'src/lib/RemoteSuite': { default: MockRemoteSuite }
+        'src/core/lib/ProxiedSession': { default: MockSession },
+        'src/core/lib/RemoteSuite': { default: MockRemoteSuite }
       }).then(handle => {
         removeMocks = handle.remove;
         Node = handle.module.default;
@@ -1081,7 +1081,10 @@ registerSuite('lib/executors/Node', function() {
                   tests: [],
                   parent,
                   run() {
-                    suiteTask = new Task<void>(() => {}, () => {});
+                    suiteTask = new Task<void>(
+                      () => {},
+                      () => {}
+                    );
                     return suiteTask;
                   }
                 });

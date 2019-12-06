@@ -1,10 +1,10 @@
-import Server from '../../../src/Server';
-import Session from '../../../src/Session';
-import { LeadfootURL } from '../../../src/interfaces';
-import { Remote } from 'intern/lib/executors/Node';
-import ProxiedSession from 'intern/lib/ProxiedSession';
+import Server from 'src/webdriver/Server';
+import Session from 'src/webdriver/Session';
+import { LeadfootURL } from 'src/webdriver/interfaces';
+import { Remote } from 'src/core/lib/executors/Node';
+import ProxiedSession from 'src/core/lib/ProxiedSession';
 
-export * from '../../../src/lib/util';
+export * from 'src/webdriver/lib/util';
 
 export function createServer(config: LeadfootURL | string) {
   return new Server(config);

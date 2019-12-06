@@ -1,11 +1,11 @@
 import { mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import { execSync } from 'child_process';
-import { ObjectSuiteDescriptor, Tests } from 'intern/lib/interfaces/object';
+import { ObjectSuiteDescriptor, Tests } from 'src/core/lib/interfaces/object';
 
-import SeleniumTunnel, { DriverFile } from '../../src/SeleniumTunnel';
-import { addStartStopTest } from '../support/integration';
-import { cleanup, deleteTunnelFiles, getDigdugArgs } from '../support/util';
+import SeleniumTunnel, { DriverFile } from 'src/tunnels/SeleniumTunnel';
+import { addStartStopTest } from 'tests/support/integration';
+import { cleanup, deleteTunnelFiles, getDigdugArgs } from 'tests/support/util';
 
 function createDownloadTest(config: any) {
   return () => {

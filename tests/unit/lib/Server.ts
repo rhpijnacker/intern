@@ -161,15 +161,15 @@ registerSuite('lib/Server', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/Server', {
+      return mockRequire(require, 'src/core/lib/Server', {
         fs,
         path,
         http: mockHttp,
         ws: mockWebSocket,
-        'src/lib/middleware/instrument': { default: instrument },
-        'src/lib/middleware/post': { default: post },
-        'src/lib/middleware/unhandled': { default: unhandled },
-        'src/lib/middleware/finalError': { default: finalError },
+        'src/core/lib/middleware/instrument': { default: instrument },
+        'src/core/lib/middleware/post': { default: post },
+        'src/core/lib/middleware/unhandled': { default: unhandled },
+        'src/core/lib/middleware/finalError': { default: finalError },
         'serve-static/index': mockServeStatic,
         express: null,
         'express/lib/express': null,

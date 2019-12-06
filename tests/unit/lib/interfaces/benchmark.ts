@@ -1,9 +1,11 @@
 import { spy } from 'sinon';
 
-import * as _benchmarkInt from 'src/lib/interfaces/benchmark';
-import BenchmarkTest, { BenchmarkTestFunction } from 'src/lib/BenchmarkTest';
-import BenchmarkSuite from 'src/lib/BenchmarkSuite';
-import Suite from 'src/lib/Suite';
+import * as _benchmarkInt from 'src/core/lib/interfaces/benchmark';
+import BenchmarkTest, {
+  BenchmarkTestFunction
+} from 'src/core/lib/BenchmarkTest';
+import BenchmarkSuite from 'src/core/lib/BenchmarkSuite';
+import Suite from 'src/core/lib/Suite';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -23,8 +25,8 @@ registerSuite('lib/interfaces/benchmark', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/interfaces/benchmark', {
-        '@theintern/common': { global: mockGlobal }
+      return mockRequire(require, 'src/core/lib/interfaces/benchmark', {
+        'src/common': { global: mockGlobal }
       }).then(handle => {
         removeMocks = handle.remove;
         benchmarkInt = handle.module;

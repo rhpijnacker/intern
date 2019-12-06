@@ -1,7 +1,7 @@
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import * as util from 'src/lib/common/util';
-import { Config } from 'src/lib/common/config';
+import * as util from 'src/core/lib/common/util';
+import { Config } from 'src/core/lib/common/config';
 
 registerSuite('lib/common/util', {
   loadConfig: {

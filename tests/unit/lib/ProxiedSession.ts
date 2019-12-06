@@ -1,4 +1,4 @@
-import _ProxiedSession from 'src/lib/ProxiedSession';
+import _ProxiedSession from 'src/core/lib/ProxiedSession';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -21,8 +21,8 @@ class MockSession {
 
 registerSuite('lib/ProxiedSession', {
   before() {
-    return mockRequire(require, 'src/lib/ProxiedSession', {
-      '@theintern/leadfoot/Session': { default: MockSession }
+    return mockRequire(require, 'src/core/lib/ProxiedSession', {
+      'src/webdriver/Session': { default: MockSession }
     }).then(result => {
       removeMocks = result.remove;
       ProxiedSession = result.module.default;

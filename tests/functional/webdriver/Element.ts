@@ -1,11 +1,11 @@
 import * as util from './support/util';
-import { strategies } from '../../src/lib/Locator';
-import Element from '../../src/Element';
-import Session from '../../src/Session';
-import { isSafari, isFirefox } from '../../src/Server';
-import { Task } from '@theintern/common';
-import Test, { TestFunction } from 'intern/lib/Test';
-import { ObjectSuiteDescriptor } from 'intern/lib/interfaces/object';
+import { strategies } from 'src/webdriver/lib/Locator';
+import Element from 'src/webdriver/Element';
+import Session from 'src/webdriver/Session';
+import { isSafari, isFirefox } from 'src/webdriver/Server';
+import { Task } from 'src/common';
+import Test, { TestFunction } from 'src/core/lib/Test';
+import { ObjectSuiteDescriptor } from 'src/core/lib/interfaces/object';
 
 const strategyNames = Object.keys(strategies);
 

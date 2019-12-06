@@ -1,11 +1,11 @@
 import * as util from './support/util';
-import { strategies } from '../../src/lib/Locator';
-import Element from '../../src/Element';
-import { WebDriverCookie, Geolocation } from '../../src/interfaces';
-import Session from '../../src/Session';
-import { Task } from '@theintern/common';
-import Test, { TestFunction } from 'intern/lib/Test';
-import Suite from 'intern/lib/Suite';
+import { strategies } from 'src/webdriver/lib/Locator';
+import Element from 'src/webdriver/Element';
+import { WebDriverCookie, Geolocation } from 'src/webdriver/interfaces';
+import Session from 'src/webdriver/Session';
+import { Task } from 'src/common';
+import Test, { TestFunction } from 'src/core/lib/Test';
+import Suite from 'src/core/lib/Suite';
 
 declare let interns: any;
 

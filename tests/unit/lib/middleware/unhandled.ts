@@ -1,9 +1,9 @@
 import { HttpError } from 'http-errors';
 import { spy, SinonSpy } from 'sinon';
 
-import unhandled from 'src/lib/middleware/unhandled';
+import unhandled from 'src/core/lib/middleware/unhandled';
 
-import { MockRequest, MockResponse } from '../../../support/unit/mocks';
+import { MockRequest, MockResponse } from 'tests/support/unit/mocks';
 
 registerSuite('lib/middleware/unhandled', function() {
   let handler: (request: any, response: any, next: any) => void;

@@ -1,4 +1,4 @@
-import Environment from 'src/lib/Environment';
+import Environment from 'src/core/lib/Environment';
 
 const { assert } = intern.getPlugin('chai');
 const { registerSuite } = intern.getInterface('object');

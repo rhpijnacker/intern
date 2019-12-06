@@ -28,7 +28,7 @@ registerSuite('lib/reporters/Runner', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/reporters/Runner', {
+      return mockRequire(require, 'src/core/lib/reporters/Runner', {
         'istanbul-lib-coverage': {
           createCoverageMap: createMockCoverageMap
         },

@@ -1,8 +1,8 @@
 import { dirname, join } from 'path';
 import { rmdirSync } from 'fs';
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import * as _util from 'src/lib/node/util';
+import * as _util from 'src/core/lib/node/util';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -128,12 +128,12 @@ registerSuite('lib/node/util', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/node/util', {
+      return mockRequire(require, 'src/core/lib/node/util', {
         fs: mockFs,
         glob: mockGlob,
         path: mockPath,
-        'src/lib/common/util': mockUtil,
-        'src/lib/node/process': { default: mockProcess }
+        'src/core/lib/common/util': mockUtil,
+        'src/core/lib/node/process': { default: mockProcess }
       }).then(handle => {
         removeMocks = handle.remove;
         util = handle.module;

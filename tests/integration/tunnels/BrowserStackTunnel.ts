@@ -1,5 +1,8 @@
-import { addEnvironmentTest, addStartStopTest } from '../support/integration';
-import BrowserStackTunnel from '../../src/BrowserStackTunnel';
+import {
+  addEnvironmentTest,
+  addStartStopTest
+} from 'tests/support/integration';
+import BrowserStackTunnel from 'src/tunnels/BrowserStackTunnel';
 
 function checkEnvironment(environment: any) {
   assert.property(environment, 'os_version');

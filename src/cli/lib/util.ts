@@ -106,12 +106,12 @@ export function print(...args: any[]) {
   }
 }
 
-export type Die = (...args: any[]) => never;
+export type Die = (...args: any[]) => void;
 
 /**
  * Logs an error message and exits
  */
-export let die = function(...args: any[]) {
+export let die: Die = function(...args: any[]) {
   console.error();
 
   if (args.length === 1 && Array.isArray(args[0])) {

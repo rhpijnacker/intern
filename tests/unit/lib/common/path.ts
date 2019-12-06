@@ -1,4 +1,4 @@
-import * as path from 'src/lib/common/path';
+import * as path from 'src/core/lib/common/path';
 
 registerSuite('lib/common/path', {
   dirname() {

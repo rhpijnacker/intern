@@ -1,10 +1,10 @@
 import * as path from 'path';
 import * as util from './support/util';
-import Command, { Context } from '../../src/Command';
-import Session from '../../src/Session';
-import { Task } from '@theintern/common';
-import Test from 'intern/lib/Test';
-import { ObjectSuiteDescriptor } from 'intern/lib/interfaces/object';
+import Command, { Context } from 'src/webdriver/Command';
+import Session from 'src/webdriver/Session';
+import { Task } from 'src/common';
+import Test from 'src/core/lib/Test';
+import { ObjectSuiteDescriptor } from 'src/core/lib/interfaces/object';
 
 registerSuite('Command', () => {
   let session: Session;

@@ -1,12 +1,12 @@
 import { createSandbox, SinonStub, SinonSpy } from 'sinon';
-import { Task, global } from '@theintern/common';
+import { Task, global } from 'src/common';
 
 import {
   createMockBrowserExecutor,
   createMockConsole,
   createMockNodeExecutor,
   MockConsole
-} from '../../support/unit/mocks';
+} from 'tests/support/unit/mocks';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 const originalIntern = global.intern;
@@ -51,11 +51,11 @@ registerSuite('bin/intern', function() {
       'basic run'() {
         const mockExecutor = createMockNodeExecutor();
         return mockRequire(require, 'src/bin/intern', {
-          'src/lib/node/util': mockNodeUtil,
-          'src/lib/common/console': mockConsole,
-          'src/lib/common/util': mockCommonUtil,
+          'src/core/lib/node/util': mockNodeUtil,
+          'src/core/lib/common/console': mockConsole,
+          'src/core/lib/common/util': mockCommonUtil,
           'src/index': { default: mockExecutor },
-          '@theintern/common': { global: { process: {} } }
+          'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;
           assert.equal(mockNodeUtil.getConfig.callCount, 1);
@@ -73,11 +73,11 @@ registerSuite('bin/intern', function() {
           environment: 'node'
         } as any);
         return mockRequire(require, 'src/bin/intern', {
-          'src/lib/node/util': mockNodeUtil,
-          'src/lib/common/console': mockConsole,
-          'src/lib/common/util': mockCommonUtil,
+          'src/core/lib/node/util': mockNodeUtil,
+          'src/core/lib/common/console': mockConsole,
+          'src/core/lib/common/util': mockCommonUtil,
           'src/index': { default: mockExecutor },
-          '@theintern/common': { global: { process: {} } }
+          'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;
           assert.equal(mockNodeUtil.getConfig.callCount, 1);
@@ -90,11 +90,11 @@ registerSuite('bin/intern', function() {
         configData = { showConfigs: true };
 
         return mockRequire(require, 'src/bin/intern', {
-          'src/lib/node/util': mockNodeUtil,
-          'src/lib/common/console': mockConsole,
-          'src/lib/common/util': mockCommonUtil,
+          'src/core/lib/node/util': mockNodeUtil,
+          'src/core/lib/common/console': mockConsole,
+          'src/core/lib/common/util': mockCommonUtil,
           'src/index': { default: createMockNodeExecutor() },
-          '@theintern/common': { global: { process: {} } }
+          'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;
           assert.equal(mockNodeUtil.getConfig.callCount, 1);
@@ -106,11 +106,11 @@ registerSuite('bin/intern', function() {
       'bad run': {
         'intern defined'() {
           return mockRequire(require, 'src/bin/intern', {
-            'src/lib/node/util': mockNodeUtil,
-            'src/lib/common/console': mockConsole,
-            'src/lib/common/util': mockCommonUtil,
+            'src/core/lib/node/util': mockNodeUtil,
+            'src/core/lib/common/console': mockConsole,
+            'src/core/lib/common/util': mockCommonUtil,
             'src/index': { default: createMockNodeExecutor() },
-            '@theintern/common': { global: { process: {} } }
+            'src/common': { global: { process: {} } }
           }).then(handle => {
             removeMocks = handle.remove;
             assert.equal(
@@ -126,11 +126,11 @@ registerSuite('bin/intern', function() {
           mockCommonUtil.getConfigDescription.throws();
 
           return mockRequire(require, 'src/bin/intern', {
-            'src/lib/node/util': mockNodeUtil,
-            'src/lib/common/console': mockConsole,
-            'src/lib/common/util': mockCommonUtil,
+            'src/core/lib/node/util': mockNodeUtil,
+            'src/core/lib/common/console': mockConsole,
+            'src/core/lib/common/util': mockCommonUtil,
             'src/index': { default: createMockNodeExecutor() },
-            '@theintern/common': {
+            'src/common': {
               global: { process: { stdout: process.stdout } }
             }
           })
@@ -155,11 +155,11 @@ registerSuite('bin/intern', function() {
             environment: 'browser'
           } as any);
           return mockRequire(require, 'src/bin/intern', {
-            'src/lib/node/util': mockNodeUtil,
-            'src/lib/common/console': mockConsole,
-            'src/lib/common/util': mockCommonUtil,
+            'src/core/lib/node/util': mockNodeUtil,
+            'src/core/lib/common/console': mockConsole,
+            'src/core/lib/common/util': mockCommonUtil,
             'src/index': { default: mockExecutor },
-            '@theintern/common': { global: { process: {} } }
+            'src/common': { global: { process: {} } }
           }).then(handle => {
             removeMocks = handle.remove;
             assert.equal(mockNodeUtil.getConfig.callCount, 1);
@@ -179,11 +179,11 @@ registerSuite('bin/intern', function() {
             environment: 'browser'
           } as any);
           return mockRequire(require, 'src/bin/intern', {
-            'src/lib/node/util': mockNodeUtil,
-            'src/lib/common/console': mockConsole,
-            'src/lib/common/util': mockCommonUtil,
+            'src/core/lib/node/util': mockNodeUtil,
+            'src/core/lib/common/console': mockConsole,
+            'src/core/lib/common/util': mockCommonUtil,
             'src/index': { default: mockExecutor },
-            '@theintern/common': { global: { process: {} } }
+            'src/common': { global: { process: {} } }
           }).then(handle => {
             removeMocks = handle.remove;
             assert.equal(mockNodeUtil.getConfig.callCount, 1);
@@ -207,11 +207,11 @@ registerSuite('bin/intern', function() {
         configData = { help: true };
 
         return mockRequire(require, 'src/bin/intern', {
-          'src/lib/node/util': mockNodeUtil,
-          'src/lib/common/console': mockConsole,
-          'src/lib/common/util': mockCommonUtil,
+          'src/core/lib/node/util': mockNodeUtil,
+          'src/core/lib/common/console': mockConsole,
+          'src/core/lib/common/util': mockCommonUtil,
           'src/index': { default: mockExecutor },
-          '@theintern/common': { global: { process: {} } }
+          'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;
           assert.match(mockConsole.log.args[0][0], /intern version \d/);

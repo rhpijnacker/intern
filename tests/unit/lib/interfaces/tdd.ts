@@ -1,9 +1,9 @@
 import { createSandbox } from 'sinon';
-import { Task } from '@theintern/common';
+import { Task } from 'src/common';
 
-import * as _tddInt from 'src/lib/interfaces/tdd';
-import Test, { isTest } from 'src/lib/Test';
-import Suite, { isSuite } from 'src/lib/Suite';
+import * as _tddInt from 'src/core/lib/interfaces/tdd';
+import Test, { isTest } from 'src/core/lib/Test';
+import Suite, { isSuite } from 'src/core/lib/Suite';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -30,8 +30,8 @@ registerSuite('lib/interfaces/tdd', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/interfaces/tdd', {
-        '@theintern/common': { global: mockGlobal }
+      return mockRequire(require, 'src/core/lib/interfaces/tdd', {
+        'src/common': { global: mockGlobal }
       }).then(handle => {
         removeMocks = handle.remove;
         tddInt = handle.module;

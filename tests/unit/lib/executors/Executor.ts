@@ -1,11 +1,15 @@
 import { createSandbox, spy } from 'sinon';
-import { Task, deepMixin, isPromiseLike } from '@theintern/common';
+import { Task, deepMixin, isPromiseLike } from 'src/common';
 
-import _Executor, { Config, Events, Plugins } from 'src/lib/executors/Executor';
+import _Executor, {
+  Config,
+  Events,
+  Plugins
+} from 'src/core/lib/executors/Executor';
 
 // Import isSuite from the testing source rather than the source being tested
-import { isSuite } from '../../../../src/lib/Suite';
-import { testProperty } from '../../../support/unit/executor';
+import { isSuite } from 'src/core/lib/Suite';
+import { testProperty } from 'tests/support/unit/executor';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
@@ -82,11 +86,11 @@ registerSuite('lib/executors/Executor', function() {
 
   return {
     before() {
-      return mockRequire(require, 'src/lib/executors/Executor', {
-        'src/lib/common/ErrorFormatter': { default: MockErrorFormatter },
-        'src/lib/common/console': mockConsole,
+      return mockRequire(require, 'src/core/lib/executors/Executor', {
+        'src/core/lib/common/ErrorFormatter': { default: MockErrorFormatter },
+        'src/core/lib/common/console': mockConsole,
         chai: mockChai,
-        '@theintern/common': {
+        'src/common': {
           global: { __coverage__: {} },
           isPromiseLike,
           Task,

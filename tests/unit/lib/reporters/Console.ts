@@ -11,7 +11,7 @@ const mockExecutor = <any>{
   }
 };
 
-registerSuite('intern/lib/reporters/Console', {
+registerSuite('src/core/lib/reporters/Console', {
   tests: {
     error() {
       const mockConsole = createMockConsole();
