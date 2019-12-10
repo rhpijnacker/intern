@@ -1,5 +1,4 @@
-import { lint, log } from './lib/util';
-import chalk from 'chalk';
+import { lint, log, logError } from './lib/util';
 
 log('Linting...');
 
@@ -7,7 +6,7 @@ try {
   lint('../tsconfig.json');
 } catch (error) {
   if (error.name === 'ExecError') {
-    log(chalk.red(error.stdout));
+    logError(error.stdout);
     process.exitCode = error.code;
   } else {
     throw error;
