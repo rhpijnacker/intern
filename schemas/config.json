@@ -374,6 +374,10 @@
         "suites": { "$ref": "#/definitions/suitesProperty" },
         "suites+": { "$ref": "#/definitions/suitesProperty+" },
 
+        "tsconfig": {
+          "oneOf": [{ "type": "string" }, { "const": false }]
+        },
+
         "tunnel": {
           "description": "The Dig Dug tunnel class to use for WebDriver testing",
           "type": "string",

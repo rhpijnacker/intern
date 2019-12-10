@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    "outDir": "../_tests"
+    "outDir": "./_tests"
   },
   "include": [
     "tests/**/*.ts"

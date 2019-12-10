@@ -11,7 +11,7 @@ class TestBase extends Base {
   }
 }
 
-registerSuite('lib/channels/Base', {
+registerSuite('core/lib/channels/Base', {
   '#sendMessage': {
     data() {
       const base = new TestBase({ sessionId: 'foo', url: 'bar' });

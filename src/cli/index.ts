@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import { Command } from 'commander';
 import { createInterface } from 'readline';
 import { watch } from 'chokidar';
@@ -16,14 +16,15 @@ import {
   print,
   readJsonFile
 } from './lib/util';
-import { getConfig } from '../core/lib/node/util';
+import { getConfig, getPackagePath } from '../core/lib/node/util';
 import { defaultConfig, getConfigDescription } from '../core/lib/common/util';
 
 function getConfigFile(cfg: string) {
   return (/@/.test(cfg) && cfg.split('@')[0]) || defaultConfig;
 }
 
-const pkgPath = dirname(__dirname);
+const pkgPath = getPackagePath();
+
 const pkg = JSON.parse(
   readFileSync(join(pkgPath, 'package.json'), { encoding: 'utf8' })
 );
@@ -239,14 +240,14 @@ program
   .option('-b, --bail', 'quit after the first failing test')
   .option('-g, --grep <regex>', 'filter tests by ID')
   .option(
-    '-l, --leaveRemoteOpen',
+    '-l, --leave-remote-open',
     'leave the remote browser open after tests finish'
   )
   .option('-p, --port <port>', 'port that test proxy should serve on', intArg)
-  .option('-I, --noInstrument', 'disable instrumentation')
+  .option('-I, --no-instrument', 'disable instrumentation')
   .option('--debug', 'enable the Node debugger')
-  .option('--serveOnly', "start Intern's test server, but don't run any tests")
-  .option('--showConfig', 'display the resolved config and exit')
+  .option('--serve-only', "start Intern's test server, but don't run any tests")
+  .option('--show-config', 'display the resolved config and exit')
   .option('--timeout <int>', 'set the default timeout for async tests', intArg)
   .option('--tunnel <name>', 'use the given tunnel for WebDriver tests')
   .option('-w, --webdriver', 'run WebDriver tests only')
@@ -292,6 +293,12 @@ program
 
     if (command.suites != null) {
       config.suites = command.suites;
+      if (config.node) {
+        config.node.suites = null;
+      }
+      if (config.browser) {
+        config.browser.suites = null;
+      }
     }
 
     if (command.fsuites != null) {
@@ -324,8 +331,8 @@ program
       config.tunnel = command.tunnel;
     }
 
-    if (command.noInstrument) {
-      config.excludeInstrumentation = true;
+    if (command.instrument === false) {
+      config.coverage = false;
     }
 
     if (command.leaveRemoteOpen) {
@@ -366,6 +373,7 @@ program
     }
 
     intern.configure(config);
+
     try {
       await intern.run();
     } catch (error) {
@@ -388,7 +396,7 @@ program
   )
   .option('-o, --open', 'open the test runner URL when the server starts')
   .option('-p, --port <port>', 'port to serve on', intArg)
-  .option('-I, --noInstrument', 'disable instrumentation')
+  .option('-I, --no-instrument', 'disable instrumentation')
   .on('--help', () => {
     print('\n');
     print([
@@ -412,8 +420,8 @@ program
       internConfig.serverPort = command.port;
     }
 
-    if (command.noInstrument) {
-      internConfig.excludeInstrumentation = true;
+    if (command.instrument === false) {
+      internConfig.coverage = false;
     }
 
     intern.configure(internConfig);

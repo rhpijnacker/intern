@@ -7,7 +7,7 @@ const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
 let Http: typeof _Http;
 
-registerSuite('lib/channels/Http', function() {
+registerSuite('core/lib/channels/Http', function() {
   const request = spy((path: string, data: any) => {
     if (requestHandler) {
       return requestHandler(path, data);

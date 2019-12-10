@@ -36,8 +36,11 @@ export function acceptVersion(
  * Collects values into an array
  */
 export function collect(val: any, arr: any[]) {
-  arr.push(val);
-  return arr;
+  if (arr) {
+    arr.push(val);
+    return arr;
+  }
+  return [val];
 }
 
 /**

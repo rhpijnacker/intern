@@ -885,7 +885,7 @@ export default abstract class BaseExecutor<
         case 'dojo2':
         case 'esm':
         case 'systemjs':
-          script = `${config.internPath}loaders/${script}.js`;
+          script = `${config.internPath}core/loaders/${script}.ts`;
       }
 
       this._loaderOptions = loader.options || {};

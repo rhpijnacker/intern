@@ -1,3 +1,5 @@
+/// <reference path="./mocking.d.ts" />
+
 intern.registerPlugin('mockRequire', () => {
   function mockRequire(
     require: NodeRequire,

@@ -6,7 +6,7 @@ import * as _util from 'src/core/lib/node/util';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
-registerSuite('lib/node/util', function() {
+registerSuite('core/lib/node/util', function() {
   let util: typeof _util;
 
   const mockFs = {
@@ -68,7 +68,9 @@ registerSuite('lib/node/util', function() {
       logCall('splitConfigPath', [path]);
       const parts = path.split('@');
       return { configFile: parts[0], childConfig: parts[1] };
-    }
+    },
+
+    defaultConfig: 'intern.json'
   };
 
   const mockGlob = {
@@ -133,7 +135,7 @@ registerSuite('lib/node/util', function() {
         glob: mockGlob,
         path: mockPath,
         'src/core/lib/common/util': mockUtil,
-        'src/core/lib/node/process': { default: mockProcess }
+        'src/core/lib/node/process': mockProcess
       }).then(handle => {
         removeMocks = handle.remove;
         util = handle.module;

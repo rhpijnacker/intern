@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "declaration": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -9,13 +10,9 @@
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "paths": {
-      "src/*": ["./src/*"],
-      "tests/*": ["./tests/*"]
-    },
     "resolveJsonModule": true,
     "strict": true,
     "target": "esnext"
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"]
+  "include": ["src/**/*", "scripts/**/*", "tests/**/*"]
 }

@@ -1,4 +1,4 @@
-import { readFile, readFileSync, mkdirSync, existsSync } from 'fs';
+import { readFile, readdirSync, readFileSync, mkdirSync, existsSync } from 'fs';
 import {
   dirname,
   extname,
@@ -135,6 +135,19 @@ export function getConfig(
       return config;
     })
     .then(config => ({ config, file }));
+}
+
+/**
+ * Return the absolute path to Intern's package
+ */
+export function getPackagePath(dir = __dirname): string {
+  if (dirname(dir) === dir) {
+    throw new Error("Couldn't find package.json");
+  }
+  if (readdirSync(dir).includes('package.json')) {
+    return dir;
+  }
+  return getPackagePath(dirname(dir));
 }
 
 /**

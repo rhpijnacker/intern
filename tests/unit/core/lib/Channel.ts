@@ -9,11 +9,11 @@ let messages: string[];
 let websocketError: 'construct' | 'send' | null;
 let removeMocks: () => void;
 
-registerSuite('lib/Channel', {
+registerSuite('core/lib/Channel', {
   before() {
     return mockRequire(require, 'src/core/lib/Channel', {
-      'src/core/lib/channels/WebSocket': { default: MockWebSocket },
-      'src/core/lib/channels/Http': { default: MockHttp }
+      'src/core/lib/channels/WebSocket': MockWebSocket,
+      'src/core/lib/channels/Http': MockHttp
     }).then(handle => {
       removeMocks = handle.remove;
       Channel = handle.module.default;

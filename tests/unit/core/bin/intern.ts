@@ -1,5 +1,6 @@
 import { createSandbox, SinonStub, SinonSpy } from 'sinon';
 import { Task, global } from 'src/common';
+import { getPackagePath } from 'src/core/lib/node/util';
 
 import {
   createMockBrowserExecutor,
@@ -13,10 +14,11 @@ const originalIntern = global.intern;
 
 registerSuite('bin/intern', function() {
   const sandbox = createSandbox();
-  const mockNodeUtil: { [name: string]: SinonSpy } = {
+  const mockNodeUtil: { [name: string]: SinonSpy<any, any> } = {
     getConfig: sandbox.spy((..._args: any[]) => {
       return Task.resolve({ config: configData, file: 'intern.json' });
-    })
+    }),
+    getPackagePath: sandbox.spy(() => getPackagePath())
   };
 
   const originalExitCode = process.exitCode;
@@ -50,11 +52,11 @@ registerSuite('bin/intern', function() {
     tests: {
       'basic run'() {
         const mockExecutor = createMockNodeExecutor();
-        return mockRequire(require, 'src/bin/intern', {
+        return mockRequire(require, 'src/core/bin/intern', {
           'src/core/lib/node/util': mockNodeUtil,
           'src/core/lib/common/console': mockConsole,
           'src/core/lib/common/util': mockCommonUtil,
-          'src/index': { default: mockExecutor },
+          'src/core/index': mockExecutor,
           'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;
@@ -72,11 +74,11 @@ registerSuite('bin/intern', function() {
         const mockExecutor = createMockNodeExecutor({
           environment: 'node'
         } as any);
-        return mockRequire(require, 'src/bin/intern', {
+        return mockRequire(require, 'src/core/bin/intern', {
           'src/core/lib/node/util': mockNodeUtil,
           'src/core/lib/common/console': mockConsole,
           'src/core/lib/common/util': mockCommonUtil,
-          'src/index': { default: mockExecutor },
+          'src/core/index': mockExecutor,
           'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;
@@ -89,11 +91,11 @@ registerSuite('bin/intern', function() {
       'show configs'() {
         configData = { showConfigs: true };
 
-        return mockRequire(require, 'src/bin/intern', {
+        return mockRequire(require, 'src/core/bin/intern', {
           'src/core/lib/node/util': mockNodeUtil,
           'src/core/lib/common/console': mockConsole,
           'src/core/lib/common/util': mockCommonUtil,
-          'src/index': { default: createMockNodeExecutor() },
+          'src/core/index': createMockNodeExecutor(),
           'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;
@@ -105,11 +107,11 @@ registerSuite('bin/intern', function() {
 
       'bad run': {
         'intern defined'() {
-          return mockRequire(require, 'src/bin/intern', {
+          return mockRequire(require, 'src/core/bin/intern', {
             'src/core/lib/node/util': mockNodeUtil,
             'src/core/lib/common/console': mockConsole,
             'src/core/lib/common/util': mockCommonUtil,
-            'src/index': { default: createMockNodeExecutor() },
+            'src/core/index': createMockNodeExecutor(),
             'src/common': { global: { process: {} } }
           }).then(handle => {
             removeMocks = handle.remove;
@@ -125,11 +127,11 @@ registerSuite('bin/intern', function() {
           configData = { showConfigs: true };
           mockCommonUtil.getConfigDescription.throws();
 
-          return mockRequire(require, 'src/bin/intern', {
+          return mockRequire(require, 'src/core/bin/intern', {
             'src/core/lib/node/util': mockNodeUtil,
             'src/core/lib/common/console': mockConsole,
             'src/core/lib/common/util': mockCommonUtil,
-            'src/index': { default: createMockNodeExecutor() },
+            'src/core/index': createMockNodeExecutor(),
             'src/common': {
               global: { process: { stdout: process.stdout } }
             }
@@ -154,11 +156,11 @@ registerSuite('bin/intern', function() {
           const mockExecutor = createMockBrowserExecutor({
             environment: 'browser'
           } as any);
-          return mockRequire(require, 'src/bin/intern', {
+          return mockRequire(require, 'src/core/bin/intern', {
             'src/core/lib/node/util': mockNodeUtil,
             'src/core/lib/common/console': mockConsole,
             'src/core/lib/common/util': mockCommonUtil,
-            'src/index': { default: mockExecutor },
+            'src/core/index': mockExecutor,
             'src/common': { global: { process: {} } }
           }).then(handle => {
             removeMocks = handle.remove;
@@ -178,11 +180,11 @@ registerSuite('bin/intern', function() {
           const mockExecutor = createMockBrowserExecutor({
             environment: 'browser'
           } as any);
-          return mockRequire(require, 'src/bin/intern', {
+          return mockRequire(require, 'src/core/bin/intern', {
             'src/core/lib/node/util': mockNodeUtil,
             'src/core/lib/common/console': mockConsole,
             'src/core/lib/common/util': mockCommonUtil,
-            'src/index': { default: mockExecutor },
+            'src/core/index': mockExecutor,
             'src/common': { global: { process: {} } }
           }).then(handle => {
             removeMocks = handle.remove;
@@ -206,11 +208,11 @@ registerSuite('bin/intern', function() {
         });
         configData = { help: true };
 
-        return mockRequire(require, 'src/bin/intern', {
+        return mockRequire(require, 'src/core/bin/intern', {
           'src/core/lib/node/util': mockNodeUtil,
           'src/core/lib/common/console': mockConsole,
           'src/core/lib/common/util': mockCommonUtil,
-          'src/index': { default: mockExecutor },
+          'src/core/index': mockExecutor,
           'src/common': { global: { process: {} } }
         }).then(handle => {
           removeMocks = handle.remove;

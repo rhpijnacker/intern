@@ -5,10 +5,10 @@ let mockGlobal = Object.create(null);
 
 class MockNode {}
 
-registerSuite('index', {
+registerSuite('core/index', {
   before() {
-    return mockRequire(require, 'src/index', {
-      'src/core/lib/executors/Node': { default: MockNode },
+    return mockRequire(require, 'src/core/index', {
+      'src/core/lib/executors/Node': MockNode,
       'src/common': { global: mockGlobal }
     }).then(resource => {
       removeMocks = resource.remove;

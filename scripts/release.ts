@@ -16,10 +16,9 @@
 
 import { echo, mkdir, rm, test } from 'shelljs';
 import * as semver from 'semver';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { format } from 'util';
-import { buildDir, exec, internDev, log } from './common';
-import { join } from 'path';
+import { exec, log } from './lib/util';
 import { createInterface } from 'readline';
 import chalk from 'chalk';
 import { spawnSync } from 'child_process';
@@ -331,14 +330,7 @@ if (!npmTag) {
     // Give the user a chance to verify everything is good before making any updates
     log('Done!');
 
-    let publishDir = internDev && internDev.publishDir;
-    if (!publishDir) {
-      publishDir = buildDir;
-      if (existsSync(join(buildDir, 'src'))) {
-        publishDir = join(buildDir, 'src');
-      }
-    }
-
+    const publishDir = '_build';
     log(`Package to be published from ${tmpDir}/${publishDir}.`);
 
     let question =

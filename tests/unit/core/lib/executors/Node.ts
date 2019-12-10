@@ -9,7 +9,7 @@ import { testProperty } from 'tests/support/unit/executor';
 
 const mockRequire = intern.getPlugin<mocking.MockRequire>('mockRequire');
 
-registerSuite('lib/executors/Node', function() {
+registerSuite('core/lib/executors/Node', function() {
   function createExecutor(config?: Partial<Config>) {
     const executor = new Node(config);
     executor.registerLoader((_options: any) => (_modules: string[]) =>
@@ -235,84 +235,90 @@ registerSuite('lib/executors/Node', function() {
   let sessions: MockSession[];
   let coverageMaps: MockCoverageMap[];
   let Node: typeof _Node;
-  let removeMocks: () => void;
+  let allRemoveMocks: (() => void)[] = [];
   let fsData: { [name: string]: string };
 
   return {
     before() {
-      return mockRequire(require, 'src/core/lib/executors/Node', {
-        'src/core/lib/common/ErrorFormatter': { default: MockErrorFormatter },
-        'src/core/lib/common/console': mockConsole,
-        'src/core/lib/node/util': mockNodeUtil,
-        chai: mockChai,
-        path: mockPath,
-        fs: mockFs,
-        'src/common': {
-          global: mockGlobal,
-          isPromiseLike,
-          Task,
-          deepMixin
-        },
-        'src/core/lib/reporters/Pretty': { default: MockReporter },
-        'src/core/lib/reporters/Runner': { default: MockReporter },
-        'src/core/lib/reporters/Simple': { default: MockReporter },
-        'src/core/lib/reporters/JsonCoverage': { default: MockReporter },
-        'src/core/lib/reporters/HtmlCoverage': { default: MockReporter },
-        'src/core/lib/reporters/Lcov': { default: MockReporter },
-        'src/core/lib/reporters/Benchmark': { default: MockReporter },
-        'istanbul-lib-coverage': {
-          classes: {
-            FileCoverage: {
-              prototype: {
-                merge() {}
+      return mockRequire(require, 'src/core/lib/executors/Executor', {
+        'src/core/lib/common/console': mockConsole
+      }).then(handle => {
+        allRemoveMocks.push(handle.remove);
+        const Executor = handle.module.default;
+
+        return mockRequire(require, 'src/core/lib/executors/Node', {
+          'src/core/lib/common/ErrorFormatter': MockErrorFormatter,
+          'src/core/lib/common/console': mockConsole,
+          'src/core/lib/executors/Executor': Executor,
+          'src/core/lib/node/util': mockNodeUtil,
+          chai: mockChai,
+          path: mockPath,
+          fs: mockFs,
+          'src/common': {
+            global: mockGlobal,
+            isPromiseLike,
+            Task,
+            deepMixin
+          },
+          'src/core/lib/reporters/Pretty': MockReporter,
+          'src/core/lib/reporters/Runner': MockReporter,
+          'src/core/lib/reporters/Simple': MockReporter,
+          'src/core/lib/reporters/JsonCoverage': MockReporter,
+          'src/core/lib/reporters/HtmlCoverage': MockReporter,
+          'src/core/lib/reporters/Lcov': MockReporter,
+          'src/core/lib/reporters/Benchmark': MockReporter,
+          'istanbul-lib-coverage': {
+            classes: {
+              FileCoverage: {
+                prototype: {
+                  merge() {}
+                }
               }
+            },
+            createCoverageMap() {
+              return new MockCoverageMap();
             }
           },
-          createCoverageMap() {
-            return new MockCoverageMap();
-          }
-        },
-        'istanbul-lib-hook': {
-          hookRunInThisContext() {},
-          hookRequire() {},
-          unhookRunInThisContext() {}
-        },
-        'istanbul-lib-instrument': {
-          createInstrumenter() {
-            return new MockInstrumenter();
+          'istanbul-lib-hook': {
+            hookRunInThisContext() {},
+            hookRequire() {},
+            unhookRunInThisContext() {}
           },
-          readInitialCoverage(code: string) {
-            return { coverageData: `covered: ${code}` };
-          }
-        },
-        'istanbul-lib-source-maps': {
-          createSourceMapStore() {
-            return new MockMapStore();
-          }
-        },
-        'ts-node': {
-          register: mockTsNodeRegister
-        },
-        'src/core/lib/Server': { default: MockServer },
-        'src/core/lib/resolveEnvironments': {
-          default: () => {
+          'istanbul-lib-instrument': {
+            createInstrumenter() {
+              return new MockInstrumenter();
+            },
+            readInitialCoverage(code: string) {
+              return { coverageData: `covered: ${code}` };
+            }
+          },
+          'istanbul-lib-source-maps': {
+            createSourceMapStore() {
+              return new MockMapStore();
+            }
+          },
+          'ts-node': {
+            register: mockTsNodeRegister
+          },
+          'src/core/lib/Server': MockServer,
+          'src/core/lib/resolveEnvironments': () => {
             return ['foo env'];
-          }
-        },
-        'src/webdriver/Command': { default: MockCommand },
-        'src/webdriver/Server': { default: MockLeadfootServer },
-        '@theintern/digdug/NullTunnel': { default: MockTunnel },
-        '@theintern/digdug/BrowserStackTunnel': { default: MockTunnel },
-        'src/core/lib/ProxiedSession': { default: MockSession },
-        'src/core/lib/RemoteSuite': { default: MockRemoteSuite }
-      }).then(handle => {
-        removeMocks = handle.remove;
-        Node = handle.module.default;
+          },
+          'src/webdriver/Command': MockCommand,
+          'src/webdriver/Server': MockLeadfootServer,
+          'src/tunnels/NullTunnel': MockTunnel,
+          'src/tunnels/BrowserStackTunnel': MockTunnel,
+          'src/core/lib/ProxiedSession': MockSession,
+          'src/core/lib/RemoteSuite': MockRemoteSuite
+        }).then(handle => {
+          allRemoveMocks.push(handle.remove);
+          Node = handle.module.default;
+        });
       });
     },
 
     after() {
-      removeMocks();
+      allRemoveMocks.forEach(remove => remove());
     },
 
     beforeEach() {
@@ -790,7 +796,7 @@ registerSuite('lib/executors/Node', function() {
           tests: {
             'good script'() {
               const module = require.resolve(
-                '../../data/lib/executors/intern.js'
+                '../../../data/lib/executors/intern.js'
               );
               assert.isUndefined(
                 require.cache[module],
@@ -804,12 +810,13 @@ registerSuite('lib/executors/Node', function() {
             },
 
             'good node_module'() {
-              const module = require.resolve('commander');
+              // Try loading a module that shouldn't already be loaded
+              const module = require.resolve('yargs');
               assert.isUndefined(
                 require.cache[module],
                 'expected test module not to be loaded already'
               );
-              executor.loadScript('commander');
+              executor.loadScript('yargs');
               assert.isDefined(
                 require.cache[module],
                 'expected module to have been loaded'
@@ -853,6 +860,11 @@ registerSuite('lib/executors/Node', function() {
             executor.on(
               'beforeRun',
               dfd.callback(() => {
+                assert.equal(
+                  mockConsole.warn.callCount,
+                  1,
+                  'should have been a call to console.warn'
+                );
                 for (let call of mockConsole.warn.getCalls()) {
                   assert.include(
                     call.args[0],

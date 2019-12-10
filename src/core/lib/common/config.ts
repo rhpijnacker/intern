@@ -482,6 +482,7 @@ export interface ResourceConfig {
    * different tsconfig than the project uses normally.
    */
   tsconfig?: string | false;
+
   // Deprecated; these are only here for typing
   require: never;
   requires: never;
