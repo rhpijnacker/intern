@@ -147,12 +147,12 @@ registerSuite('Command', () => {
       'basic chaining'() {
         const command = new Command(session);
         return command
-          .get('tests/functional/data/default.html')
+          .get('tests/functional/webdriver/data/default.html')
           .getPageTitle()
           .then(function(pageTitle) {
             assert.strictEqual(pageTitle, 'Default & <b>default</b>');
           })
-          .get('tests/functional/data/form.html')
+          .get('tests/functional/webdriver/data/form.html')
           .getPageTitle()
           .then(function(pageTitle) {
             assert.strictEqual(pageTitle, 'Form');
@@ -161,7 +161,7 @@ registerSuite('Command', () => {
 
       'child is a separate command'() {
         const parent = new Command(session).get(
-          'tests/functional/data/default.html'
+          'tests/functional/webdriver/data/default.html'
         );
         const child = parent.findByTagName('p');
 
@@ -194,7 +194,7 @@ registerSuite('Command', () => {
 
         const command = new Command(session);
         return command
-          .get('tests/functional/data/form.html')
+          .get('tests/functional/webdriver/data/form.html')
           .findById('input')
           .click()
           .type('hello')
@@ -210,7 +210,7 @@ registerSuite('Command', () => {
 
       '#findAll'() {
         return new Command(session)
-          .get('tests/functional/data/elements.html')
+          .get('tests/functional/webdriver/data/elements.html')
           .findAllByClassName('b')
           .getAttribute('id')
           .then(function(ids) {
@@ -220,7 +220,7 @@ registerSuite('Command', () => {
 
       '#findAll chain'() {
         return new Command(session)
-          .get('tests/functional/data/elements.html')
+          .get('tests/functional/webdriver/data/elements.html')
           .findById('c')
           .findAllByClassName('b')
           .getAttribute('id')
@@ -242,7 +242,7 @@ registerSuite('Command', () => {
 
       '#findAll + #findAll'() {
         return new Command(session)
-          .get('tests/functional/data/elements.html')
+          .get('tests/functional/webdriver/data/elements.html')
           .findAllByTagName('div')
           .findAllByCssSelector('span, a')
           .getAttribute('id')
@@ -257,7 +257,7 @@ registerSuite('Command', () => {
         }
 
         return new Command(session)
-          .get('tests/functional/data/visibility.html')
+          .get('tests/functional/webdriver/data/visibility.html')
           .findDisplayedByClassName('multipleVisible')
           .getVisibleText()
           .then(function(text) {
@@ -279,7 +279,7 @@ registerSuite('Command', () => {
         }
 
         return new Command(session)
-          .get('tests/functional/data/pointer.html')
+          .get('tests/functional/webdriver/data/pointer.html')
           .findById('a')
           .moveMouseTo()
           .pressMouseButton()
