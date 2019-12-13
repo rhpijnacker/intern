@@ -508,7 +508,7 @@ registerSuite('Element', () => {
               .findById('input')
               .then(element => element.type('hello'))
               .then(() => session.findById('submit2'))
-              .then(element => element.submit())
+              .then(element => element.click())
               .then(
                 // Give the browser time to update the URL
                 // after the submit (this is necessary for at

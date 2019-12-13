@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as util from './support/util';
 import Command, { Context } from 'src/webdriver/Command';
 import Session from 'src/webdriver/Session';
@@ -37,9 +36,9 @@ registerSuite('Command', () => {
               },
               function(error: Error) {
                 assert.strictEqual(error.message, 'broken');
-                assert.include(
+                assert.match(
                   error.stack!,
-                  path.join('tests', 'functional', 'Command.js') + ':25',
+                  /broken.*tests\/functional\/webdriver\/Command\.[tj]s:\d+/s,
                   'Stack trace should point back to the error'
                 );
                 error.message += ' 2';
@@ -53,6 +52,9 @@ registerSuite('Command', () => {
                 );
               },
               function(error: Error) {
+                if (error.name === 'AssertionError') {
+                  throw error;
+                }
                 assert.strictEqual(error.message, 'broken 2');
               }
             );
@@ -80,9 +82,9 @@ registerSuite('Command', () => {
                 error.message,
                 'Original error message should be provided on the first line of the stack trace'
               );
-              assert.include(
+              assert.match(
                 stack,
-                path.join('tests', 'functional', 'Command.js') + ':46',
+                /Invalid call.*tests\/functional\/webdriver\/Command\.[tj]s:\d+/s,
                 'Stack trace should point back to the async method call that eventually threw the error'
               );
             }
