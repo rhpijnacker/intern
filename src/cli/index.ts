@@ -287,7 +287,9 @@ program
     print();
   })
   .action(async (_args, command) => {
-    const { config } = await getConfig(configName);
+    // Use getConfig's argv form so that it won't try to parse the actual argv,
+    // which we're handling here
+    const { config } = await getConfig(['', '', `config=${configName}`]);
 
     if (command.showConfig) {
       config.showConfig = true;
